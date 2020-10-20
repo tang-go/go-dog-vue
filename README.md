@@ -5,7 +5,7 @@ go-dog-tool对应的前端界面
 
 ### 使用
 
-- Clone repo
+- clone 仓库
 ```bash
 git clone https://github.com/tang-go/go-dog-vue.git
 cd go-dog-vue
