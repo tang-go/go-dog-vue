@@ -10,14 +10,14 @@
             type="inner"
             @openChange="onOpenChange"
           >
-            <a-menu-item key="/power/role/list">
-              <router-link :to="{ name: 'RoleList' }">
-                {{ $t('menu.power.role') }}
+            <a-menu-item key="/service/rpc/list">
+              <router-link :to="{ name: 'RpcList' }">
+                {{ $t('menu.service.rpc') }}
               </router-link>
             </a-menu-item>
-            <a-menu-item key="/power/permission/list">
-              <router-link :to="{ name: 'PermissionList' }">
-                {{ $t('menu.power.permission') }}
+            <a-menu-item key="/service/api/list">
+              <router-link :to="{ name: 'ApiList' }">
+                {{ $t('menu.service.api') }}
               </router-link>
             </a-menu-item>
           </a-menu>

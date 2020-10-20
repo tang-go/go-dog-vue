@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/github.com/tang-go/go-dog/controller/v1/admin/login',
-  UserInfo: '/github.com/tang-go/go-dog/controller/v1/get/admin/info',
+  Login: '/go-dog/controller/v1/admin/login',
+  UserInfo: '/go-dog/controller/v1/get/admin/info',
   Logout: '/auth/logout',
   ForgePassword: '/auth/forge-password',
   Register: '/auth/register',

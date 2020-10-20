@@ -13,7 +13,7 @@ function resolve (dir) {
 function getGitHash () {
   try {
     return GitRevision.version()
-  } catch (e) {}
+  } catch (e) { }
   return 'unknown'
 }
 
@@ -39,6 +39,7 @@ const assetsCDN = {
 
 // vue.config.js
 const vueConfig = {
+  lintOnSave: false,
   configureWebpack: {
     // webpack plugins
     plugins: [

@@ -12,6 +12,14 @@ const locale = {
   'menu.home': 'home',
   'menu.index': 'index',
 
+  'menu.service': 'service',
+  'menu.service.rpc': 'rpc list',
+  'menu.service.api': 'api list',
+
+  'menu.power': 'power',
+  'menu.power.role': 'role',
+  'menu.power.permission': 'permission',
+
   'menu.admin': 'center',
   'menu.admin.center': 'center',
   'menu.admin.logout': 'logout',
