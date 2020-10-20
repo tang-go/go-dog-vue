@@ -32,3 +32,4 @@ yarn run build
 - 特别感谢Ant Design Vue团队的管理系统框架
 - 首页 https://pro.antdv.com
 - 仓库 https://github.com/vueComponent/ant-design-vue-pro
+- go-dog-tool工具 https://github.com/tang-go/go-dog-tool
