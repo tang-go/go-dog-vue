@@ -2,10 +2,10 @@
 import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
 // import { bxAnaalyse } from '@/core/icons'
 
-// const RouteView = {
-//   name: 'RouteView',
-//   render: (h) => h('router-view')
-// }
+const RouteView = {
+  name: 'RouteView',
+  render: (h) => h('router-view')
+}
 
 export const asyncRouterMap = [
 
@@ -26,7 +26,7 @@ export const asyncRouterMap = [
       {
         path: '/service',
         name: 'service',
-        component: () => import('@/views/service/Index'),
+        component: RouteView,
         meta: { title: 'menu.service', hideHeader: true, permission: ['admin'] },
         redirect: '/service/rpc/list',
         hideChildrenInMenu: true,
@@ -37,12 +37,12 @@ export const asyncRouterMap = [
             component: () => import('@/views/service/RpcList'),
             meta: { title: 'menu.service.rpc', hidden: true, keepAlive: true, permission: ['admin'] }
           },
-          {
-            path: '/service/api/list',
-            name: 'ApiList',
-            component: () => import('@/views/other/PermissionList'),
-            meta: { title: 'menu.service.api', hidden: true, keepAlive: true, permission: ['admin'] }
-          }
+          // {
+          //   path: '/service/api/list',
+          //   name: 'ApiList',
+          //   component: () => import('@/views/other/PermissionList'),
+          //   meta: { title: 'menu.service.api', hidden: true, keepAlive: true, permission: ['admin'] }
+          // }
         ]
       },
       // 权限
