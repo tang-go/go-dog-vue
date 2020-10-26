@@ -13,8 +13,9 @@ const locale = {
   'menu.index': '首页',
 
   'menu.service': '服务管理',
-  'menu.service.rpc': '服务列表',
-  'menu.service.api': 'API列表',
+  'menu.service.rpc': '在线服务列表',
+  'menu.service.build': '发布docker镜像',
+  'menu.service.docker': 'docker启动镜像',
 
   'menu.power': '权限管理',
   'menu.power.role': '角色管理',

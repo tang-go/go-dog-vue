@@ -2,10 +2,10 @@
 import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
 // import { bxAnaalyse } from '@/core/icons'
 
-const RouteView = {
-  name: 'RouteView',
-  render: (h) => h('router-view')
-}
+// const RouteView = {
+//   name: 'RouteView',
+//   render: (h) => h('router-view')
+// }
 
 export const asyncRouterMap = [
 
@@ -26,48 +26,54 @@ export const asyncRouterMap = [
       {
         path: '/service',
         name: 'service',
-        component: RouteView,
+        component: () => import('@/views/service/Index'),
         meta: { title: 'menu.service', hideHeader: true, permission: ['admin'] },
-        redirect: '/service/rpc/list',
+        redirect: '/service/build/service',
         hideChildrenInMenu: true,
         children: [
+          {
+            path: '/service/build/service',
+            name: 'BuildService',
+            component: () => import('@/views/service/BuildService'),
+            meta: { title: 'menu.service.build', hidden: true, keepAlive: true, permission: ['admin'] }
+          },
+          {
+            path: '/service/start/docker',
+            name: 'StartDocker',
+            component: () => import('@/views/service/StartDocker'),
+            meta: { title: 'menu.service.docker', hidden: true, keepAlive: true, permission: ['admin'] }
+          },
           {
             path: '/service/rpc/list',
             name: 'RpcList',
             component: () => import('@/views/service/RpcList'),
             meta: { title: 'menu.service.rpc', hidden: true, keepAlive: true, permission: ['admin'] }
-          },
-          // {
-          //   path: '/service/api/list',
-          //   name: 'ApiList',
-          //   component: () => import('@/views/other/PermissionList'),
-          //   meta: { title: 'menu.service.api', hidden: true, keepAlive: true, permission: ['admin'] }
-          // }
-        ]
-      },
-      // 权限
-      {
-        path: '/power',
-        name: 'power',
-        component: () => import('@/views/role/Index'),
-        meta: { title: 'menu.power', hideHeader: true, permission: ['admin'] },
-        redirect: '/power/role/list',
-        hideChildrenInMenu: true,
-        children: [
-          {
-            path: '/power/role/list',
-            name: 'RoleList',
-            component: () => import('@/views/role/RoleList'),
-            meta: { title: 'menu.power.role', hidden: true, keepAlive: true, permission: ['admin'] }
-          },
-          {
-            path: '/power/permission/list',
-            name: 'PermissionList',
-            component: () => import('@/views/other/PermissionList'),
-            meta: { title: 'menu.power.permission', hidden: true, keepAlive: true, permission: ['admin'] }
           }
         ]
       }
+      // 权限
+      // {
+      //   path: '/power',
+      //   name: 'power',
+      //   component: () => import('@/views/role/Index'),
+      //   meta: { title: 'menu.power', hideHeader: true, permission: ['admin'] },
+      //   redirect: '/power/role/list',
+      //   hideChildrenInMenu: true,
+      //   children: [
+      //     {
+      //       path: '/power/role/list',
+      //       name: 'RoleList',
+      //       component: () => import('@/views/role/RoleList'),
+      //       meta: { title: 'menu.power.role', hidden: true, keepAlive: true, permission: ['admin'] }
+      //     },
+      //     {
+      //       path: '/power/permission/list',
+      //       name: 'PermissionList',
+      //       component: () => import('@/views/other/PermissionList'),
+      //       meta: { title: 'menu.power.permission', hidden: true, keepAlive: true, permission: ['admin'] }
+      //     }
+      //   ]
+      // }
     ]
   },
   // account
