@@ -7,6 +7,7 @@ import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { i18nRender } from '@/locales'
+import { Connect } from '@/utils/websocket'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -21,7 +22,7 @@ router.beforeEach((to, from, next) => {
   if (storage.get(ACCESS_TOKEN)) {
     console.log('路由', to.path)
     if (to.path === loginRoutePath) {
-       next()
+      next()
       // next({ path: loginRoutePath })
       // NProgress.done()
     } else {
@@ -29,20 +30,21 @@ router.beforeEach((to, from, next) => {
       // check login user.roles is null
       if (store.getters.roles.length === 0) {
         // request login userInfo
-         store.dispatch('GetInfo')
-           .then(res => {
-              const roles = res.body && res.body.role
-              store.dispatch('GenerateRoutes', { roles }).then(() => {
-                router.addRoutes(store.getters.addRouters)
-                // 请求带有 redirect 重定向时，登录自动重定向到该地址
-                const redirect = decodeURIComponent(from.query.redirect || to.path)
-                if (to.path === redirect) {
-                  next({ ...to, replace: true })
-                } else {
-                  next({ path: redirect })
-                }
-             })
-           })
+        store.dispatch('GetInfo')
+          .then(res => {
+            const roles = res.body && res.body.role
+            store.dispatch('GenerateRoutes', { roles }).then(() => {
+              router.addRoutes(store.getters.addRouters)
+              // 请求带有 redirect 重定向时，登录自动重定向到该地址
+              Connect('ws://127.0.0.1/ws?token=' + storage.get(ACCESS_TOKEN))
+              const redirect = decodeURIComponent(from.query.redirect || to.path)
+              if (to.path === redirect) {
+                next({ ...to, replace: true })
+              } else {
+                next({ path: redirect })
+              }
+            })
+          })
           .catch(() => {
             notification.error({
               message: '错误',
@@ -50,10 +52,11 @@ router.beforeEach((to, from, next) => {
             })
             // 失败时，获取用户信息失败时，调用登出，来清空历史保留信息
             // store.dispatch('Logout').then(() => {
-               next({ path: loginRoutePath })
+            next({ path: loginRoutePath })
             // })
           })
       } else {
+        Connect('ws://127.0.0.1/ws?token=' + storage.get(ACCESS_TOKEN))
         next()
       }
     }
