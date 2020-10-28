@@ -1,10 +1,16 @@
 
-let socket = null
+var socket = null
+var topics = {}
 
-export function Connect (path) {
+export function connect (token) {
+  if (!token) {
+    return
+  }
   if (socket !== null) {
     return
   }
+  const path = process.env.VUE_APP_API_WS_URL + '?token=' + token
+  console.log(path)
   if (typeof (WebSocket) === 'undefined') {
     alert('您的浏览器不支持socket')
   } else {
@@ -21,6 +27,11 @@ export function Connect (path) {
   }
 }
 
+export function listTopic (topic, callback) {
+  topics[topic] = callback
+  console.log('listen', topic, callback)
+}
+
 function OnOpen () {
   console.log('socket连接成功')
   setInterval(function () {
@@ -33,7 +44,11 @@ function OnError () {
 }
 
 function OnMessage (msg) {
-  console.log(msg)
+  const data = JSON.parse(msg.data)
+  const func = topics[data.topic]
+  if (func) {
+    func(data.msg)
+  }
 }
 
 function Send (msg) {

@@ -7,7 +7,7 @@ import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { i18nRender } from '@/locales'
-import { Connect } from '@/utils/websocket'
+import { connect } from '@/utils/websocket'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -36,7 +36,7 @@ router.beforeEach((to, from, next) => {
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               router.addRoutes(store.getters.addRouters)
               // 请求带有 redirect 重定向时，登录自动重定向到该地址
-              Connect('ws://127.0.0.1/ws?token=' + storage.get(ACCESS_TOKEN))
+              connect(storage.get(ACCESS_TOKEN))
               const redirect = decodeURIComponent(from.query.redirect || to.path)
               if (to.path === redirect) {
                 next({ ...to, replace: true })
@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
             // })
           })
       } else {
-        Connect('ws://127.0.0.1/ws?token=' + storage.get(ACCESS_TOKEN))
+        connect(storage.get(ACCESS_TOKEN))
         next()
       }
     }

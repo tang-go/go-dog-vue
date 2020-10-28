@@ -15,7 +15,7 @@ export default {
   name: 'Turnoverfamily',
   data () {
     return {
-      bdTokenUrl: 'http://127.0.0.1/swagger/index.html'
+      bdTokenUrl: 'http://127.0.0.1:8080/swagger/index.html'
     }
   },
   created () { },

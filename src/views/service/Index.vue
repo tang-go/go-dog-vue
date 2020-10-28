@@ -31,7 +31,7 @@
           <div class="account-settings-info-title">
             <span>{{ $t($route.meta.title) }}</span>
           </div>
-          <route-view></route-view>
+          <route-view :key="key" ></route-view>
         </div>
       </div>
     </a-card>
@@ -78,6 +78,11 @@ export default {
   },
   mounted () {
     this.updateMenu()
+  },
+  computed: {
+    key () {
+      return this.$route.path + Math.random()
+    }
   },
   methods: {
     onOpenChange (openKeys) {
