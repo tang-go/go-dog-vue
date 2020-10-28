@@ -23,21 +23,6 @@
           <span>返回参数:<json-viewer :value="response.response"></json-viewer></span>
         </p>
       </a-table>
-      <!-- <span slot="operation">
-        <a>Pause</a>
-        <a>Stop</a>
-        <a-dropdown>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              Action 1
-            </a-menu-item>
-            <a-menu-item>
-              Action 2
-            </a-menu-item>
-          </a-menu>
-          <a> More <a-icon type="down" /> </a>
-        </a-dropdown>
-      </span> -->
     </a-table>
   </a-table>
 </template>

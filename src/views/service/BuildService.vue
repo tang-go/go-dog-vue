@@ -1,42 +1,42 @@
 <template>
   <div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="buildServiceClick">编译发布服务</a-button>
+      <a-button type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.build.button.build') }}</a-button>
     </div>
     <s-table ref="table" size="default" :columns="columns" :data="data">
       <span slot="status" slot-scope="status" > 
-        <div v-if="status"><a-badge status="success" />执行成功</div>
-        <div v-if="!status"><a-badge status="default" />执行中</div>
+        <div v-if="status"><a-badge status="success" />{{ $t('menu.service.build.table.status.success') }}</div>
+        <div v-if="!status"><a-badge status="default" />{{ $t('menu.service.build.table.status.ing') }}</div>
       </span>
       <span slot="action" slot-scope="text, record">
-        <a @click="seeLog(record.log)">查看执行日志</a>
+        <a @click="seeLog(record.log)">{{ $t('menu.service.build.button.seelog') }}</a>
       </span>
     </s-table>
-    <a-modal style="overflow:auto" :footer="null" :width="800" v-model="logModel" title="执行日志">
-      <div>
+    <a-modal style="overflow:auto" :footer="null" :width="800" v-model="logModel" :title="$t('menu.service.build.title.seelog')">
+      <div style="height: 500px; overflow-y: scroll;">
         <p v-html="log">{{ log }}</p>
       </div>
     </a-modal>
-    <a-modal :footer="null" :width="800" v-model="buildModel" title="发布服务">
+    <a-modal :footer="null" :width="800" v-model="buildModel" :title="$t('menu.service.build.title.build')">
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-        <a-form-item label="Git地址">
+        <a-form-item :label="$t('menu.service.build.form.git')">
           <a-input v-decorator="['git', { rules: [{ required: true, message: '请输入git仓库地址' }] }]"/>
         </a-form-item>
-        <a-form-item label="镜像仓库地址">
+        <a-form-item :label="$t('menu.service.build.form.harbor')">
           <a-input v-decorator="['harbor', { rules: [{ required: true, message: '请输入镜像仓库地址' }] }]"/>
         </a-form-item>
-        <a-form-item label="镜像名称">
+        <a-form-item :label="$t('menu.service.build.form.name')">
           <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入镜像名称' }] }]"/>
         </a-form-item>
-        <a-form-item label="需要编译的相对目录">
+        <a-form-item :label="$t('menu.service.build.form.path')">
           <a-input v-decorator="['path', { rules: [{ required: true, message: '请输入需要编译的目录' }] }]"/>
         </a-form-item>
-        <a-form-item label="镜像版本">
+        <a-form-item :label="$t('menu.service.build.form.version')">
           <a-input v-decorator="['version', { rules: [{ required: true, message: '镜像版本' }] }]"/>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
           <a-button type="primary" html-type="submit">
-            确定
+            {{ $t('menu.service.build.form.button') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -59,13 +59,6 @@ export default {
     return {
       logModel: false,
       log: '',
-      columns: [
-        { title: 'ID', dataIndex: 'id', key: 'id' },
-        { title: '名称', dataIndex: 'image', key: 'image' },
-        { title: '执行状态', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
-        { title: '时间', dataIndex: 'time', key: 'time' },
-        { title: '操作', dataIndex: 'action', scopedSlots: { customRender: 'action' } },
-      ],
       // 查询条件参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
@@ -83,6 +76,17 @@ export default {
         path: 'string',
         version: 'string',
       }),
+    }
+  },
+  computed:{
+    columns() {
+      return [
+        { title: this.$t('menu.service.build.table.id'), dataIndex: 'id', key: 'id' },
+        { title: this.$t('menu.service.build.table.name'), dataIndex: 'image', key: 'image' },
+        { title: this.$t('menu.service.build.table.status'), dataIndex: 'status', scopedSlots: { customRender: 'status' } },
+        { title: this.$t('menu.service.build.table.time'), dataIndex: 'time', key: 'time' },
+        { title: this.$t('menu.service.build.table.action'), dataIndex: 'action', scopedSlots: { customRender: 'action' } },
+      ]
     }
   },
   created () {
