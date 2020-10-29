@@ -23,7 +23,7 @@ const locale = {
   'menu.service.build.table.id': 'ID',
   'menu.service.build.table.name': '名称',
   'menu.service.build.table.status': '执行状态',
-  'menu.service.build.table.status.success': '执行成功',
+  'menu.service.build.table.status.success': '执行完成',
   'menu.service.build.table.status.ing': '执行中',
   'menu.service.build.table.time': '时间',
   'menu.service.build.table.action': '操作',
@@ -34,7 +34,23 @@ const locale = {
   'menu.service.build.form.version': '版本',
   'menu.service.build.form.button': '确定发布',
 
-  'menu.service.docker': 'docker启动镜像',
+  'menu.service.docker': '通过docker启动服务',
+  'menu.service.docker.title.build': '启动服务',
+  'menu.service.docker.title.see': '详情',
+  'menu.service.docker.button.build': '启动服务',
+  'menu.service.docker.button.see': '详情',
+
+  'menu.service.docker.table.name': '名称',
+  'menu.service.docker.table.image': '镜像',
+  'menu.service.docker.table.status': '状态',
+  'menu.service.docker.table.time': '时间',
+  'menu.service.docker.table.action': '操作',
+
+  'menu.service.docker.form.images': '镜像地址',
+  'menu.service.docker.form.name': '服务名称',
+  'menu.service.docker.form.port': '映射端口',
+  'menu.service.docker.form.port.button': '添加端口映射',
+  'menu.service.docker.form.button': '启动',
 
   'menu.power': '权限管理',
   'menu.power.role': '角色管理',

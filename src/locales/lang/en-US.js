@@ -15,7 +15,7 @@ const locale = {
   'menu.service': 'service manager',
   'menu.service.rpc': 'service list',
 
-  'menu.service.build': 'build service',
+  'menu.service.build': 'publish docker image',
   'menu.service.build.title.build': 'build service',
   'menu.service.build.title.seelog': 'run log',
   'menu.service.build.button.build': 'build service',
@@ -23,7 +23,7 @@ const locale = {
   'menu.service.build.table.id': 'id',
   'menu.service.build.table.name': 'name',
   'menu.service.build.table.status': 'run status',
-  'menu.service.build.table.status.success': 'success',
+  'menu.service.build.table.status.success': 'complete',
   'menu.service.build.table.status.ing': 'ing',
   'menu.service.build.table.time': 'time',
   'menu.service.build.table.action': 'action',
