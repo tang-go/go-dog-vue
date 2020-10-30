@@ -1,30 +1,35 @@
 <template>
-  <a-table :columns="columns" :data-source="data" class="components-table-demo-nested">
-    <a-table
-      class="components-table-demo-nested"
-      slot-scope="record"
-      slot="expandedRowRender"
-      :columns="innerColumns"
-      :data-source="record.info"
-      :pagination="false">
-      <span slot="status" > <a-badge status="success" />运行中 </span>
+  <div class="table-page-search-wrapper">
+    <div class="table-operator">
+      <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.build.button.update') }}</a-button>
+    </div>
+    <a-table ref="table" :columns="columns" :data-source="data" class="components-table-demo-nested">
       <a-table
-        slot-scope="row"
+        class="components-table-demo-nested"
+        slot-scope="record"
         slot="expandedRowRender"
-        :columns="methods"
-        :data-source="row.methods"
+        :columns="innerColumns"
+        :data-source="record.info"
         :pagination="false">
-        <span slot="isAuth" slot-scope="method" > 
-          <div v-if="method.isAuth"><a-badge status="success" />需要验证</div>
-          <div v-if="!method.isAuth"><a-badge status="default" />不需要验证</div>
-        </span>
-        <p slot="expandedRowRender" slot-scope="response" style="margin: 0">
-          <span>请求参数:<json-viewer :value="response.request"></json-viewer></span>
-          <span>返回参数:<json-viewer :value="response.response"></json-viewer></span>
-        </p>
+        <span slot="status" > <a-badge status="success" />运行中 </span>
+        <a-table
+          slot-scope="row"
+          slot="expandedRowRender"
+          :columns="methods"
+          :data-source="row.methods"
+          :pagination="false">
+          <span slot="isAuth" slot-scope="method" > 
+            <div v-if="method.isAuth"><a-badge status="success" />需要验证</div>
+            <div v-if="!method.isAuth"><a-badge status="default" />不需要验证</div>
+          </span>
+          <p slot="expandedRowRender" slot-scope="response" style="margin: 0">
+            <span>请求参数:<json-viewer :value="response.request"></json-viewer></span>
+            <span>返回参数:<json-viewer :value="response.response"></json-viewer></span>
+          </p>
+        </a-table>
       </a-table>
     </a-table>
-  </a-table>
+  </div>
 </template>
 <script>
 import { getServiceList } from '@/api/service'
@@ -86,11 +91,26 @@ export default {
           })
         }
       }
-
     })
   },
   methods: {
-
+    updateClick () {
+      getServiceList().then(res => {
+        console.log(res)
+        this.data = []
+        if (res.code === 10000) {
+          const body = res.body
+          for (let i = 0; i < body.list.length; ++i) {
+            this.data.push({
+              key: i,
+              name: body.list[i].name,
+              explain: body.list[i].explain,
+              info: body.list[i].info,
+            })
+          }
+        }
+      })
+    }
   }
 }
 </script>

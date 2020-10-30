@@ -2,15 +2,16 @@
   <div>
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.docker.button.build') }}</a-button>
+      <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.docker.button.update') }}</a-button>
     </div>
     <s-table ref="table" size="default" :columns="columns" :data="data">
       <span slot="action" slot-scope="text, record">
-        <a @click="seeLog(record.log)">{{ $t('menu.service.docker.button.see') }}</a>
+        <a @click="seeLog(record)">{{ $t('menu.service.docker.button.see') }}</a>
       </span>
     </s-table>
     <a-modal style="overflow:auto" :footer="null" :width="800" v-model="logModel" :title="$t('menu.service.docker.title.see')">
       <div style="height: 500px; overflow-y: scroll;">
-        <p v-html="log">{{ log }}</p>
+        <json-viewer :value="details"></json-viewer>
       </div>
     </a-modal>
     <a-modal :footer="null" :width="800" v-model="buildModel" :title="$t('menu.service.docker.title.build')">
@@ -36,7 +37,7 @@
             -
           </span>
           <a-form-item :style="{ display: 'inline-block', width: 'calc(40% - 12px)' }">
-            <a-input type="number" v-decorator="[`ports[${k}].insidePort.number`, { rules: [{ required: true, message: '请输入容器端口' }] }]" placeholder="容器端口"/>
+            <a-input type="number" v-decorator="[`ports[${k}].insidePort`, { rules: [{ required: true, message: '请输入容器端口' }] }]" placeholder="容器端口"/>
           </a-form-item>
           <a-icon
             v-if="form.getFieldValue('keys').length >= 1"
@@ -64,6 +65,7 @@
 <script>
 import { STable } from '@/components'
 import { listTopic } from '@/utils/websocket'
+import JsonViewer from 'vue-json-viewer'
 
 import { getDockerList } from '@/api/service'
 import { startDocker } from '@/api/service'
@@ -72,7 +74,8 @@ import { thistle } from 'color-name'
 let id = 0
 export default {
   components: {
-    STable
+    STable,
+    JsonViewer
   },
   data () {
     return {
@@ -101,7 +104,7 @@ export default {
         },
       },
       logModel: false,
-      log: '',
+      details: {},
       // 查询条件参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
@@ -115,7 +118,7 @@ export default {
     }
   },
   beforeCreate () {
-    this.form = this.$form.createForm(this, { images: 'string', name: 'dynamic_form_item' })
+    this.form = this.$form.createForm(this, { images: 'string', name: '', ports: [] })
     this.form.getFieldDecorator('keys', { initialValue: [], preserve: true })
   },
   computed: {
@@ -138,6 +141,9 @@ export default {
     })
   },
   methods: {
+    updateClick () {
+      this.$refs.table.refresh(true)
+    },
     remove (k) {
       const { form } = this
       const keys = form.getFieldValue('keys')
@@ -157,28 +163,50 @@ export default {
       })
     },
     buildServiceClick () {
+      this.form = this.$form.createForm(this, { images: 'string', name: '', ports: [] })
+      this.form.getFieldDecorator('keys', { initialValue: [], preserve: true })
       this.buildModel = true
     },
-    seeLog (log) {
-      this.log = log
+    seeLog (msg) {
+      this.details = {
+        id: msg.id,
+        name: msg.name,
+        image: msg.image,
+        ports: msg.ports,
+        status: msg.status,
+        command: msg.command,
+        time: msg.time,
+      }
       this.logModel = true
     },
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
-        var images = values.images
-        var name = values.name
-        var ports = values.ports
-        if (!ports) {
-          ports = []
+        if (!values.ports) {
+          values.ports = []
         }
-        console.log(images, name, ports)
-        this.form = this.$form.createForm(this, { images: 'string', name: 'dynamic_form_item' })
-        this.form.getFieldDecorator('keys', { initialValue: [], preserve: true })
+        var ports = values.ports.filter(function (s) {
+          console.log(s)
+          if (s) {
+            return true
+          }
+          return false
+        })
+        var param = { images: values.images, name: values.name, ports: ports }
+        console.log(param)
         if (!err) {
-          startDocker({ images: images, name: name, ports: ports }).then(res => {
+          startDocker(param).then(res => {
+            if (res.code !== 10000) {
+              this.$notification['error']({
+                message: '错误提示',
+                description:
+                  res.msg,
+                duration: 3,
+              })
+              return
+            }
+            this.$refs.table.refresh(true)
             this.buildModel = false
-            this.seeLog('正在记载执行日志....</p>')
           })
         }
       })

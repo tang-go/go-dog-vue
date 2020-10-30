@@ -18,36 +18,35 @@ export const asyncRouterMap = [
     children: [
       {
         path: '/index',
-        name: 'menu.index',
+        name: 'index',
         meta: { title: 'menu.index', keepAlive: true, permission: ['index', 'admin'] },
         component: () => import('@/views/index/index')
       },
-      // 权限
       {
         path: '/service',
-        name: 'service',
-        component: () => import('@/views/service/Index'),
-        meta: { title: 'menu.service', hideHeader: true, permission: ['admin'] },
-        redirect: '/service/build/service',
+        name: 'RpcList',
+        meta: { title: 'menu.service', keepAlive: true, permission: ['admin'] },
+        component: () => import('@/views/service/RpcList')
+      },
+      {
+        path: '/docker',
+        name: 'docker',
+        component: () => import('@/views/docker/Index'),
+        meta: { title: 'menu.docker', hideHeader: true, permission: ['admin'] },
+        redirect: '/docker/build',
         hideChildrenInMenu: true,
         children: [
           {
-            path: '/service/build/service',
+            path: '/docker/build',
             name: 'BuildService',
-            component: () => import('@/views/service/BuildService'),
+            component: () => import('@/views/docker/BuildService'),
             meta: { title: 'menu.service.build', hidden: true, keepAlive: true, permission: ['admin'] }
           },
           {
-            path: '/service/start/docker',
+            path: '/docker/start',
             name: 'StartDocker',
-            component: () => import('@/views/service/StartDocker'),
+            component: () => import('@/views/docker/StartDocker'),
             meta: { title: 'menu.service.docker', hidden: true, keepAlive: true, permission: ['admin'] }
-          },
-          {
-            path: '/service/rpc/list',
-            name: 'RpcList',
-            component: () => import('@/views/service/RpcList'),
-            meta: { title: 'menu.service.rpc', hidden: true, keepAlive: true, permission: ['admin'] }
           }
         ]
       }

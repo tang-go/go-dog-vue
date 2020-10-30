@@ -10,19 +10,14 @@
             type="inner"
             @openChange="onOpenChange"
           >
-            <a-menu-item key="/service/build/service">
+            <a-menu-item key="/docker/build">
               <router-link :to="{ name: 'BuildService' }">
                 {{ $t('menu.service.build') }}
               </router-link>
             </a-menu-item>
-            <a-menu-item key="/service/start/docker">
+            <a-menu-item key="/docker/start">
               <router-link :to="{ name: 'StartDocker' }">
                 {{ $t('menu.service.docker') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/service/rpc/list">
-              <router-link :to="{ name: 'RpcList' }">
-                {{ $t('menu.service.rpc') }}
               </router-link>
             </a-menu-item>
           </a-menu>

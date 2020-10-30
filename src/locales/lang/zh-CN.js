@@ -12,13 +12,15 @@ const locale = {
   'menu.home': '主页',
   'menu.index': '首页',
 
-  'menu.service': '服务管理',
-  'menu.service.rpc': '在线服务列表',
+  'menu.service': '在线服务',
+  'menu.service.rpc': '在线服务',
 
+  'menu.docker': 'docker管理',
   'menu.service.build': '发布docker镜像',
   'menu.service.build.title.build': '发布服务',
   'menu.service.build.title.seelog': '执行日志',
   'menu.service.build.button.build': '编译发布服务',
+  'menu.service.build.button.update': '刷新',
   'menu.service.build.button.seelog': '查看执行日志',
   'menu.service.build.table.id': 'ID',
   'menu.service.build.table.name': '名称',
@@ -38,6 +40,7 @@ const locale = {
   'menu.service.docker.title.build': '启动服务',
   'menu.service.docker.title.see': '详情',
   'menu.service.docker.button.build': '启动服务',
+  'menu.service.docker.button.update': '刷新',
   'menu.service.docker.button.see': '详情',
 
   'menu.service.docker.table.name': '名称',

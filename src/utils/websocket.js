@@ -1,7 +1,7 @@
 
 var socket = null
 var topics = {}
-
+var ticker = null
 export function connect (token) {
   if (!token) {
     return
@@ -34,9 +34,11 @@ export function listTopic (topic, callback) {
 
 function OnOpen () {
   console.log('socket连接成功')
-  setInterval(function () {
-    Send('ping')
-  }, 2000)
+  if (socket) {
+    ticker = setInterval(function () {
+      Send('ping')
+    }, 2000)
+  }
 }
 
 function OnError () {
@@ -57,5 +59,6 @@ function Send (msg) {
 
 function OnClose () {
   console.log('socket已经关闭')
+  clearInterval(ticker)
   socket = null
 }

@@ -2,6 +2,7 @@
   <div>
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.build.button.build') }}</a-button>
+      <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.build.button.update') }}</a-button>
     </div>
     <s-table ref="table" size="default" :columns="columns" :data="data">
       <span slot="status" slot-scope="status" > 
@@ -78,8 +79,8 @@ export default {
       }),
     }
   },
-  computed:{
-    columns() {
+  computed: {
+    columns () {
       return [
         { title: this.$t('menu.service.build.table.id'), dataIndex: 'id', key: 'id' },
         { title: this.$t('menu.service.build.table.name'), dataIndex: 'image', key: 'image' },
@@ -97,6 +98,9 @@ export default {
     })
   },
   methods: {
+    updateClick () {
+      this.$refs.table.refresh(true)
+    },
     buildServiceClick () {
       this.buildModel = true
     },
@@ -107,15 +111,22 @@ export default {
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
-        console.log(values)
-        if (!err) {
-          buildService(values).then(res => {
-            this.buildModel = false
-            this.seeLog('正在记载执行日志....</p>')
-          })
-        }
+        buildService(values).then(res => {
+          if (res.code !== 10000) {
+            this.$notification['error']({
+              message: '错误提示',
+              description:
+                res.msg,
+              duration: 3,
+            })
+            return
+          }
+          this.buildModel = false
+          this.$refs.table.refresh(true)
+          this.seeLog('正在记载执行日志....</p>')
+        })
       })
-    },
-  },
+    }
+  }
 }
 </script>
