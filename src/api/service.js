@@ -6,6 +6,7 @@ const serviceApi = {
   BuildService: '/go-dog/controller/v1/build/service',
   GetDockerList: '/go-dog/controller/v1/get/docker/list',
   StartDocker: '/go-dog/controller/v1/strat/docker',
+  CloseDocker: '/go-dog/controller/v1/clsoe/docker',
 }
 
 export function getServiceList (parameter) {
@@ -26,6 +27,14 @@ export function getDockerList (parameter) {
   })
 }
 
+
+export function closeDocker (parameter) {
+  return request({
+    url: serviceApi.CloseDocker,
+    method: 'post',
+    data: parameter
+  })
+}
 
 export function startDocker (parameter) {
   return request({

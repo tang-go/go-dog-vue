@@ -13,7 +13,13 @@
         <a @click="seeLog(record.log)">{{ $t('menu.service.build.button.seelog') }}</a>
       </span>
     </s-table>
-    <a-modal style="overflow:auto" :footer="null" :width="800" v-model="logModel" :title="$t('menu.service.build.title.seelog')">
+    <a-modal 
+      style="overflow:auto" 
+      :footer="null" 
+      :width="800" 
+      v-model="logModel" 
+      @cancel="logcancel" 
+      :title="$t('menu.service.build.title.seelog')">
       <div style="height: 500px; overflow-y: scroll;">
         <p v-html="log">{{ log }}</p>
       </div>
@@ -28,6 +34,12 @@
         </a-form-item>
         <a-form-item :label="$t('menu.service.build.form.name')">
           <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入镜像名称' }] }]"/>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.build.form.account')">
+          <a-input v-decorator="['account', { rules: [{ required: false, message: '请输入Harbor账号' }] }]"/>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.build.form.pwd')">
+          <a-input v-decorator="['pwd', { rules: [{ required: false, message: '请输入Harbor密码' }] }]"/>
         </a-form-item>
         <a-form-item :label="$t('menu.service.build.form.path')">
           <a-input v-decorator="['path', { rules: [{ required: true, message: '请输入需要编译的目录' }] }]"/>
@@ -98,6 +110,9 @@ export default {
     })
   },
   methods: {
+    logcancel (e) {
+      this.$refs.table.refresh(true)
+    },
     updateClick () {
       this.$refs.table.refresh(true)
     },
@@ -123,7 +138,7 @@ export default {
           }
           this.buildModel = false
           this.$refs.table.refresh(true)
-          this.seeLog('正在记载执行日志....</p>')
+          this.seeLog('正在加载执行日志....</p>')
         })
       })
     }

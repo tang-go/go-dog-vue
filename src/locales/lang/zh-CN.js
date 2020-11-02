@@ -32,6 +32,8 @@ const locale = {
   'menu.service.build.form.git': 'git地址',
   'menu.service.build.form.harbor': '镜像地址',
   'menu.service.build.form.name': '镜像名称',
+  'menu.service.build.form.account': 'harbor账号',
+  'menu.service.build.form.pwd': '密码',
   'menu.service.build.form.path': '需要编译的代码路径',
   'menu.service.build.form.version': '版本',
   'menu.service.build.form.button': '确定发布',
@@ -42,6 +44,7 @@ const locale = {
   'menu.service.docker.button.build': '启动服务',
   'menu.service.docker.button.update': '刷新',
   'menu.service.docker.button.see': '详情',
+  'menu.service.docker.button.close': '关闭',
 
   'menu.service.docker.table.name': '名称',
   'menu.service.docker.table.image': '镜像',
@@ -50,6 +53,8 @@ const locale = {
   'menu.service.docker.table.action': '操作',
 
   'menu.service.docker.form.images': '镜像地址',
+  'menu.service.docker.form.account': 'harbor账号',
+  'menu.service.docker.form.pwd': '密码',
   'menu.service.docker.form.name': '服务名称',
   'menu.service.docker.form.port': '映射端口',
   'menu.service.docker.form.port.button': '添加端口映射',

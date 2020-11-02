@@ -6,10 +6,12 @@
     </div>
     <s-table ref="table" size="default" :columns="columns" :data="data">
       <span slot="action" slot-scope="text, record">
-        <a @click="seeLog(record)">{{ $t('menu.service.docker.button.see') }}</a>
+        <a @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
+        <a-divider type="vertical" />
+        <a @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
       </span>
     </s-table>
-    <a-modal style="overflow:auto" :footer="null" :width="800" v-model="logModel" :title="$t('menu.service.docker.title.see')">
+    <a-modal style="overflow:auto" :footer="null" :width="800" v-model="detailsModel" :title="$t('menu.service.docker.title.see')">
       <div style="height: 500px; overflow-y: scroll;">
         <json-viewer :value="details"></json-viewer>
       </div>
@@ -21,6 +23,12 @@
         </a-form-item>
         <a-form-item :label="$t('menu.service.docker.form.name')" v-bind="formItemLayout">
           <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入服务名称' }] }]"/>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.docker.form.account')" v-bind="formItemLayout">
+          <a-input v-decorator="['account', { rules: [{ required: false, message: '请输入Harbor账号' }] }]"/>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.docker.form.pwd')" v-bind="formItemLayout">
+          <a-input v-decorator="['pwd', { rules: [{ required: false, message: '请输入Harbor密码' }] }]"/>
         </a-form-item>
         <a-form-item 
           v-for="(k, index) in form.getFieldValue('keys')"
@@ -59,6 +67,17 @@
         </a-form-item>
       </a-form>
     </a-modal>
+    <a-modal 
+      @cancel="logcancel" 
+      style="overflow:auto" 
+      :footer="null" 
+      :width="800" 
+      v-model="logModel" 
+      :title="$t('menu.service.build.title.seelog')">
+      <div style="height: 500px; overflow-y: scroll;">
+        <p v-html="log">{{ log }}</p>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -67,8 +86,7 @@ import { STable } from '@/components'
 import { listTopic } from '@/utils/websocket'
 import JsonViewer from 'vue-json-viewer'
 
-import { getDockerList } from '@/api/service'
-import { startDocker } from '@/api/service'
+import { getDockerList, startDocker, closeDocker } from '@/api/service'
 import { thistle } from 'color-name'
 
 let id = 0
@@ -104,6 +122,8 @@ export default {
         },
       },
       logModel: false,
+      log: {},
+      detailsModel: false,
       details: {},
       // 查询条件参数
       queryParam: {},
@@ -135,12 +155,47 @@ export default {
   created () {
     console.log(this.form)
     const _this = this
-    listTopic('build-service-topic', function (res) {
+    listTopic('run-docker-topic', function (res) {
       console.log(res)
       _this.log = _this.log + res + '</p>'
     })
   },
   methods: {
+    close (info) {
+      const _this = this
+      this.$confirm({
+        title: '提示',
+        content: '关闭服务将无法找回是否继续',
+        onOk () {
+          closeDocker({ id: info.id }).then(res => {
+            if (res.code !== 10000) {
+              _this.$notification['error']({
+                message: '错误提示',
+                description: res.msg,
+                duration: 3,
+              })
+            }
+            _this.$notification['success']({
+              message: '提示',
+              description: '删除成功',
+              duration: 3,
+            })
+            setTimeout(() => {
+              _this.$refs.table.refresh(true)
+              console.log('刷新')
+            }, 1000)
+          })
+        },
+        onCancel () { },
+      })
+    },
+    logcancel (e) {
+      this.$refs.table.refresh(true)
+    },
+    seeLog (log) {
+      this.log = log
+      this.logModel = true
+    },
     updateClick () {
       this.$refs.table.refresh(true)
     },
@@ -167,7 +222,7 @@ export default {
       this.form.getFieldDecorator('keys', { initialValue: [], preserve: true })
       this.buildModel = true
     },
-    seeLog (msg) {
+    seeDetails (msg) {
       this.details = {
         id: msg.id,
         name: msg.name,
@@ -177,7 +232,7 @@ export default {
         command: msg.command,
         time: msg.time,
       }
-      this.logModel = true
+      this.detailsModel = true
     },
     handleSubmit (e) {
       e.preventDefault()
@@ -192,7 +247,7 @@ export default {
           }
           return false
         })
-        var param = { images: values.images, name: values.name, ports: ports }
+        var param = { images: values.images, account: values.account, pwd: values.pwd, name: values.name, ports: ports }
         console.log(param)
         if (!err) {
           startDocker(param).then(res => {
@@ -205,8 +260,9 @@ export default {
               })
               return
             }
-            this.$refs.table.refresh(true)
             this.buildModel = false
+            this.$refs.table.refresh(true)
+            this.seeLog('正在加载执行日志....</p>')
           })
         }
       })
