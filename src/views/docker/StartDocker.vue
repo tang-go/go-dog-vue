@@ -5,10 +5,16 @@
       <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.docker.button.update') }}</a-button>
     </div>
     <s-table ref="table" size="default" :columns="columns" :data="data">
+      <span slot="runStatus" slot-scope="runStatus" > 
+        <div v-if="runStatus"><a-badge status="success" />{{ $t('menu.service.docker.table.status.run') }}</div>
+        <div v-if="!runStatus"><a-badge status="default" />{{ $t('menu.service.docker.table.status.close') }}</div>
+      </span>
       <span slot="action" slot-scope="text, record">
-        <a @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
+        <a v-if="record.runStatus" @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
+        <a v-if="!record.runStatus" @click="restart(record)">{{ $t('menu.service.docker.button.run') }}</a>
         <a-divider type="vertical" />
-        <a @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
+        <a v-if="record.runStatus" @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
+        <a v-if="!record.runStatus" @click="del(record)">{{ $t('menu.service.docker.button.del') }}</a>
       </span>
     </s-table>
     <a-modal style="overflow:auto" :footer="null" :width="800" v-model="detailsModel" :title="$t('menu.service.docker.title.see')">
@@ -86,7 +92,7 @@ import { STable } from '@/components'
 import { listTopic } from '@/utils/websocket'
 import JsonViewer from 'vue-json-viewer'
 
-import { getDockerList, startDocker, closeDocker } from '@/api/service'
+import { getDockerList, startDocker, closeDocker,restartDocker,delDocker } from '@/api/service'
 import { thistle } from 'color-name'
 
 let id = 0
@@ -144,9 +150,10 @@ export default {
   computed: {
     columns () {
       return [
+        { title: this.$t('menu.service.docker.table.dockerid'), dataIndex: 'dockerId', key: 'dockerId' },
         { title: this.$t('menu.service.docker.table.name'), dataIndex: 'name', key: 'name' },
         { title: this.$t('menu.service.docker.table.image'), dataIndex: 'image', key: 'image' },
-        { title: this.$t('menu.service.docker.table.status'), dataIndex: 'status', key: 'status' },
+        { title: this.$t('menu.service.docker.table.status'), dataIndex: 'runStatus', scopedSlots: { customRender: 'runStatus' } },
         { title: this.$t('menu.service.docker.table.time'), dataIndex: 'time', key: 'time' },
         { title: this.$t('menu.service.docker.table.action'), dataIndex: 'action', scopedSlots: { customRender: 'action' } },
       ]
@@ -161,11 +168,65 @@ export default {
     })
   },
   methods: {
+    restart(info){
+      console.log('restart',info)
+      const _this = this
+      this.$confirm({
+        title: '提示',
+        content: '是否重启服务',
+        onOk () {
+          restartDocker({ dockerId: info.dockerId }).then(res => {
+            if (res.code !== 10000) {
+              _this.$notification['error']({
+                message: '错误提示',
+                description: res.msg,
+                duration: 3,
+              })
+              return
+            }
+            _this.buildModel = false
+            _this.$refs.table.refresh(true)
+            _this.seeLog('正在加载执行日志....</p>')
+          })
+        },
+        onCancel () { },
+      })
+    },
+    del(info){
+      console.log('del',info)
+      const _this = this
+      this.$confirm({
+        title: '提示',
+        content: '删除服务将无法找回是否继续',
+        onOk () {
+          delDocker({ dockerId: info.dockerId }).then(res => {
+            if (res.code !== 10000) {
+              _this.$notification['error']({
+                message: '错误提示',
+                description: res.msg,
+                duration: 3,
+              })
+              return
+            }
+            _this.$notification['success']({
+              message: '提示',
+              description: '删除成功',
+              duration: 3,
+            })
+            setTimeout(() => {
+              _this.$refs.table.refresh(true)
+              console.log('刷新')
+            }, 1000)
+          })
+        },
+        onCancel () { },
+      })
+    },
     close (info) {
       const _this = this
       this.$confirm({
         title: '提示',
-        content: '关闭服务将无法找回是否继续',
+        content: '是否关闭服务',
         onOk () {
           closeDocker({ id: info.id }).then(res => {
             if (res.code !== 10000) {
@@ -174,10 +235,11 @@ export default {
                 description: res.msg,
                 duration: 3,
               })
+              return
             }
             _this.$notification['success']({
               message: '提示',
-              description: '删除成功',
+              description: '关闭成功',
               duration: 3,
             })
             setTimeout(() => {

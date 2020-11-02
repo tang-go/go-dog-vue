@@ -44,11 +44,16 @@ const locale = {
   'menu.service.docker.button.build': '启动服务',
   'menu.service.docker.button.update': '刷新',
   'menu.service.docker.button.see': '详情',
+  'menu.service.docker.button.run': '启动',
+  'menu.service.docker.button.del': '删除',
   'menu.service.docker.button.close': '关闭',
 
+  'menu.service.docker.table.dockerid':'ID',
   'menu.service.docker.table.name': '名称',
   'menu.service.docker.table.image': '镜像',
   'menu.service.docker.table.status': '状态',
+  'menu.service.docker.table.status.run': '运行中',
+  'menu.service.docker.table.status.close': '停止中',
   'menu.service.docker.table.time': '时间',
   'menu.service.docker.table.action': '操作',
 

@@ -7,6 +7,8 @@ const serviceApi = {
   GetDockerList: '/go-dog/controller/v1/get/docker/list',
   StartDocker: '/go-dog/controller/v1/strat/docker',
   CloseDocker: '/go-dog/controller/v1/clsoe/docker',
+  DelDocker :'/go-dog/controller/v1/del/docker',
+  RestartDocker :'/go-dog/controller/v1/restart/docker',
 }
 
 export function getServiceList (parameter) {
@@ -28,6 +30,20 @@ export function getDockerList (parameter) {
 }
 
 
+export function delDocker (parameter) {
+  return request({
+    url: serviceApi.DelDocker,
+    method: 'post',
+    data: parameter
+  })
+}
+export function restartDocker (parameter) {
+  return request({
+    url: serviceApi.RestartDocker,
+    method: 'post',
+    data: parameter
+  })
+}
 export function closeDocker (parameter) {
   return request({
     url: serviceApi.CloseDocker,
