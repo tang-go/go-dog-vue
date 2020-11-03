@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 const api = {
-  user: '/user',
-  role: '/go-dog/controller/v1/get/role/list',
-  service: '/service',
-  permission: '/permission',
-  permissionNoPager: '/permission/no-pager',
-  orgTree: '/org/tree'
+  user: '/api/user',
+  role: '/api/go-dog/controller/v1/get/role/list',
+  service: '/api/service',
+  permission: '/api/permission',
+  permissionNoPager: '/api/permission/no-pager',
+  orgTree: '/api/org/tree'
 }
 
 export default api

@@ -32,6 +32,12 @@ export function listTopic (topic, callback) {
   console.log('listen', topic, callback)
 }
 
+export function close(){
+  if (socket!==null){
+    socket.close()
+  }
+}
+
 function OnOpen () {
   console.log('socket连接成功')
   if (socket) {

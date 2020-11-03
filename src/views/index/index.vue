@@ -15,7 +15,7 @@ export default {
   name: 'Turnoverfamily',
   data () {
     return {
-      bdTokenUrl: 'http://127.0.0.1:8080/swagger/index.html'
+      bdTokenUrl: process.env.VUE_APP_API_BASE_URL+'/swagger/index.html'
     }
   },
   created () { },

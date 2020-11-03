@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 
 const serviceApi = {
-  GetServiceList: '/go-dog/controller/v1/get/service/list',
-  GetBuildServiceList: '/go-dog/controller/v1/get/build/service/list',
-  BuildService: '/go-dog/controller/v1/build/service',
-  GetDockerList: '/go-dog/controller/v1/get/docker/list',
-  StartDocker: '/go-dog/controller/v1/strat/docker',
-  CloseDocker: '/go-dog/controller/v1/clsoe/docker',
-  DelDocker :'/go-dog/controller/v1/del/docker',
-  RestartDocker :'/go-dog/controller/v1/restart/docker',
+  GetServiceList: '/api/go-dog/controller/v1/get/service/list',
+  GetBuildServiceList: '/api/go-dog/controller/v1/get/build/service/list',
+  BuildService: '/api/go-dog/controller/v1/build/service',
+  GetDockerList: '/api/go-dog/controller/v1/get/docker/list',
+  StartDocker: '/api/go-dog/controller/v1/strat/docker',
+  CloseDocker: '/api/go-dog/controller/v1/clsoe/docker',
+  DelDocker :'/api/go-dog/controller/v1/del/docker',
+  RestartDocker :'/api/go-dog/controller/v1/restart/docker',
 }
 
 export function getServiceList (parameter) {

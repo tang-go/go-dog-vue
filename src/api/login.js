@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/go-dog/controller/v1/admin/login',
-  UserInfo: '/go-dog/controller/v1/get/admin/info',
-  Logout: '/auth/logout',
-  ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  twoStepCode: '/auth/2step-code',
-  SendSms: '/account/sms',
-  SendSmsErr: '/account/sms_err',
+  Login: '/api/go-dog/controller/v1/admin/login',
+  UserInfo: '/api/go-dog/controller/v1/get/admin/info',
+  Logout: '/api/auth/logout',
+  ForgePassword: '/api/auth/forge-password',
+  Register: '/api/auth/register',
+  twoStepCode: '/api/auth/2step-code',
+  SendSms: '/api/account/sms',
+  SendSmsErr: '/api/account/sms_err',
   // get my info
   UserMenu: '/user/nav'
 }

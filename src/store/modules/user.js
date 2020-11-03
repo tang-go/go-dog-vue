@@ -2,6 +2,7 @@ import storage from 'store'
 import { login, getInfo } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
+import { close } from '@/utils/websocket'
 
 const user = {
   state: {
@@ -90,6 +91,7 @@ const user = {
           commit('SET_ROLES', [])
           storage.remove(ACCESS_TOKEN)
           resolve()
+          close()
         // }).catch(() => {
         //   resolve()
         // }).finally(() => {
