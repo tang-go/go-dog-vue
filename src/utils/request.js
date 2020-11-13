@@ -1,5 +1,5 @@
 import axios from 'axios'
- import store from '@/store'
+import store from '@/store'
 import storage from 'store'
 import router from '@/router'
 // import notification from 'ant-design-vue/es/notification'

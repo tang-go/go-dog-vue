@@ -1,4 +1,8 @@
 
+import store from '@/store'
+import router from '@/router'
+import notification from 'ant-design-vue/es/notification'
+
 var socket = null
 var topics = {}
 var ticker = null
@@ -53,6 +57,7 @@ function OnError () {
 
 function OnMessage (msg) {
   const data = JSON.parse(msg.data)
+  console.log('ws recv : ',data)
   const func = topics[data.topic]
   if (func) {
     func(data.msg)
@@ -65,6 +70,16 @@ function Send (msg) {
 
 function OnClose () {
   console.log('socket已经关闭')
+  //掉线
   clearInterval(ticker)
   socket = null
+  notification
+  notification['error']({
+    message: '错误',
+    description: 'ws链接失败',
+    duration: 4
+  })
+  store.dispatch('Logout').then(() => {
+    router.push({ name: 'login' })
+  })
 }
