@@ -30,6 +30,8 @@ const locale = {
   'menu.service.build.table.time': '时间',
   'menu.service.build.table.action': '操作',
   'menu.service.build.form.git': 'git地址',
+  'menu.service.build.form.gitAccount':'git账号',
+  'menu.service.build.form.gitPwd':'git密码',
   'menu.service.build.form.harbor': '镜像地址',
   'menu.service.build.form.name': '镜像名称',
   'menu.service.build.form.account': 'harbor账号',

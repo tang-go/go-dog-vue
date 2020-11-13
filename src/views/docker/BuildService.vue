@@ -29,6 +29,12 @@
         <a-form-item :label="$t('menu.service.build.form.git')">
           <a-input v-decorator="['git', { rules: [{ required: true, message: '请输入git仓库地址' }] }]"/>
         </a-form-item>
+        <a-form-item :label="$t('menu.service.build.form.gitAccount')">
+          <a-input v-decorator="['gitAccount', { rules: [{ required: false, message: '请输入git账号' }] }]"/>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.build.form.gitPwd')">
+          <a-input v-decorator="['gitPwd', { rules: [{ required: false, message: '请输入git密码' }] }]"/>
+        </a-form-item>
         <a-form-item :label="$t('menu.service.build.form.harbor')">
           <a-input v-decorator="['harbor', { rules: [{ required: true, message: '请输入镜像仓库地址' }] }]"/>
         </a-form-item>
@@ -126,6 +132,7 @@ export default {
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
+        console.log(values)
         buildService(values).then(res => {
           if (res.code !== 10000) {
             this.$notification['error']({
