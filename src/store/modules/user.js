@@ -10,7 +10,7 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
-    roles: [],
+    menus: [],
     info: {}
   },
 
@@ -25,8 +25,8 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_MENUS: (state, menus) => {
+      state.menus = menus
     },
     SET_INFO: (state, info) => {
       state.info = info
@@ -58,17 +58,17 @@ const user = {
           console.log('请求用户信息返回', response)
           if (response.code === 10000) {
             const result = response.body
-            if (result.role && result.role.permissions.length > 0) {
-                const role = result.role
-                role.permissions = result.role.permissions
-                role.permissions.map(per => {
-                  if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                    const action = per.actionEntitySet.map(action => { return action.action })
-                    per.actionList = action
-                  }
-                })
-                role.permissionList = role.permissions.map(permission => { return permission.permissionId })
-                commit('SET_ROLES', result.role)
+            if (result.menu && result.menu.length > 0) {
+                // const role = result.role
+                // role.permissions = result.role.permissions
+                // role.permissions.map(per => {
+                //   if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
+                //     const action = per.actionEntitySet.map(action => { return action.action })
+                //     per.actionList = action
+                //   }
+                // })
+                // role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+                commit('SET_MENUS', result.menu)
                 commit('SET_INFO', result)
             }
             commit('SET_NAME', { name: result.name, welcome: welcome() })

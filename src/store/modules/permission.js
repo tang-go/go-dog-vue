@@ -1,4 +1,4 @@
-import { asyncRouterMap, constantRouterMap } from '@/config/router.config'
+import { asyncRouterMap, constantRouterMap,routerTmpMap } from '@/config/router.config'
 
 /**
  * 过滤账户是否拥有某一个权限，并将菜单从加载列表移除
@@ -38,17 +38,26 @@ function hasRole(roles, route) {
   }
 }
 
-function filterAsyncRouter (routerMap, roles) {
-  const accessedRouters = routerMap.filter(route => {
-    if (hasPermission(roles.permissionList, route)) {
-      if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children, roles)
+function filterAsyncRouter (routerMap, menus) {
+  const newRoute = []
+  menus.forEach(function(menu){
+    routerMap.forEach(function(router){
+      if (router.path === menu.url){
+        router.meta.add = menu.add
+        router.meta.del = menu.del
+        router.meta.update = menu.update
+        router.meta.select = menu.select
+        router.meta.description = menu.description
+        if (menu.children&& menu.children.length){
+          const r = filterAsyncRouter(routerMap,menu.children)
+          router.children= r
+          router.meta.children = r
+        }
+        newRoute.push(router)
       }
-      return true
-    }
-    return false
+    })
   })
-  return accessedRouters
+  return newRoute
 }
 
 const permission = {
@@ -65,9 +74,11 @@ const permission = {
   actions: {
     GenerateRoutes ({ commit }, data) {
       return new Promise(resolve => {
-        const { roles } = data
-        const accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-        commit('SET_ROUTERS', accessedRouters)
+        const { menus } = data
+        const accessedRouters = filterAsyncRouter(asyncRouterMap, menus)
+        routerTmpMap[0].children = accessedRouters
+        console.log('routerTmpMap',routerTmpMap)
+        commit('SET_ROUTERS', routerTmpMap)
         resolve()
       })
     }

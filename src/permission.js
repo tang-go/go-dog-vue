@@ -20,20 +20,16 @@ router.beforeEach((to, from, next) => {
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`))
   /* has token */
   if (storage.get(ACCESS_TOKEN)) {
-    console.log('路由', to.path)
     if (to.path === loginRoutePath) {
       next()
-      // next({ path: loginRoutePath })
-      // NProgress.done()
     } else {
       NProgress.done()
-      // check login user.roles is null
-      if (store.getters.roles.length === 0) {
-        // request login userInfo
+      console.log('当前用户菜单',store.getters.addRouters)
+      if (store.getters.addRouters.length === 0) {
         store.dispatch('GetInfo')
           .then(res => {
-            const roles = res.body && res.body.role
-            store.dispatch('GenerateRoutes', { roles }).then(() => {
+            const menus = res.body && res.body.menu
+            store.dispatch('GenerateRoutes', { menus }).then(() => {
               router.addRoutes(store.getters.addRouters)
               // 请求带有 redirect 重定向时，登录自动重定向到该地址
               connect(storage.get(ACCESS_TOKEN))

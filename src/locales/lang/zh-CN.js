@@ -12,6 +12,10 @@ const locale = {
   'menu.home': '主页',
   'menu.index': '首页',
 
+  'menu.power': '权限管理',
+  'menu.power.menu': '菜单管理',
+  'menu.power.role': '角色管理',
+
   'menu.service': '在线服务',
   'menu.service.rpc': '在线服务',
 
@@ -67,9 +71,6 @@ const locale = {
   'menu.service.docker.form.port.button': '添加端口映射',
   'menu.service.docker.form.button': '启动',
 
-  'menu.power': '权限管理',
-  'menu.power.role': '角色管理',
-  'menu.power.permission': '权限管理',
 
   'menu.admin': '个人中心',
   'menu.admin.center': '个人中心',

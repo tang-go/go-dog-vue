@@ -10,14 +10,9 @@
             type="inner"
             @openChange="onOpenChange"
           >
-            <a-menu-item key="/power/role/list">
-              <router-link :to="{ name: 'RoleList' }">
-                {{ $t('menu.power.role') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/power/permission/list">
-              <router-link :to="{ name: 'PermissionList' }">
-                {{ $t('menu.power.permission') }}
+            <a-menu-item v-for="item in router.children" :key="item.path">
+              <router-link :to="{ name: item.name }">
+                {{ $t(item.meta.title) }}
               </router-link>
             </a-menu-item>
           </a-menu>
@@ -46,10 +41,8 @@ export default {
     return {
       // horizontal  inline
       mode: 'inline',
-
       openKeys: [],
       selectedKeys: [],
-
       // cropper
       preview: {},
       option: {
@@ -67,8 +60,15 @@ export default {
         fixed: true,
         fixedNumber: [1, 1]
       },
-
+      router:{},
       pageTitle: ''
+    }
+  },
+  created(){
+    this.router = this.$route.meta
+    for(var j = 0, len = this.router.children.length; j < len; j++) {
+      this.$router.push({path:this.router.children[j].path})
+      return
     }
   },
   mounted () {
