@@ -47,7 +47,7 @@ function filterAsyncRouter (routerMap, menus) {
         router.meta.del = menu.del
         router.meta.update = menu.update
         router.meta.select = menu.select
-        router.meta.description = menu.description
+        router.meta.descripte = menu.descripte
         if (menu.children&& menu.children.length){
           const r = filterAsyncRouter(routerMap,menu.children)
           router.children= r

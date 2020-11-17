@@ -66,12 +66,12 @@ export default {
   },
   created(){
     this.router = this.$route.meta
+  },
+  mounted () {
     for(var j = 0, len = this.router.children.length; j < len; j++) {
       this.$router.push({path:this.router.children[j].path})
       return
     }
-  },
-  mounted () {
     this.updateMenu()
   },
   methods: {
