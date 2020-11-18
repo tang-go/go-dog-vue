@@ -10,14 +10,9 @@
             type="inner"
             @openChange="onOpenChange"
           >
-            <a-menu-item key="/docker/build">
-              <router-link :to="{ name: 'BuildService' }">
-                {{ $t('menu.service.build') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/docker/start">
-              <router-link :to="{ name: 'StartDocker' }">
-                {{ $t('menu.service.docker') }}
+            <a-menu-item v-for="item in router.children" :key="item.path">
+              <router-link :to="{ name: item.name }">
+                {{ $t(item.meta.title) }}
               </router-link>
             </a-menu-item>
           </a-menu>
@@ -26,7 +21,7 @@
           <div class="account-settings-info-title">
             <span>{{ $t($route.meta.title) }}</span>
           </div>
-          <route-view :key="key" ></route-view>
+          <route-view></route-view>
         </div>
       </div>
     </a-card>
@@ -46,10 +41,8 @@ export default {
     return {
       // horizontal  inline
       mode: 'inline',
-
       openKeys: [],
       selectedKeys: [],
-
       // cropper
       preview: {},
       option: {
@@ -67,17 +60,20 @@ export default {
         fixed: true,
         fixedNumber: [1, 1]
       },
-
+      router:{},
       pageTitle: ''
     }
   },
-  mounted () {
-    this.updateMenu()
+  created(){
+    this.router = this.$route.meta
   },
-  computed: {
-    key () {
-      return this.$route.path + Math.random()
+  mounted () {
+    console.log('router',this.$route)
+    for(var j = 0, len = this.router.children.length; j < len; j++) {
+      this.$router.push({path:this.router.children[j].path})
+      return
     }
+    this.updateMenu()
   },
   methods: {
     onOpenChange (openKeys) {

@@ -14,6 +14,7 @@ const locale = {
 
   'menu.power': '权限管理',
   'menu.power.menu': '菜单管理',
+  'menu.power.api': 'API管理',
   'menu.power.role': '角色管理',
 
   'menu.service': '在线服务',

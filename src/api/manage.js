@@ -2,7 +2,6 @@ import request from '@/utils/request'
 
 const api = {
   user: '/api/user',
-  role: '/api/go-dog/controller/v1/get/role/list',
   service: '/api/service',
   permission: '/api/permission',
   permissionNoPager: '/api/permission/no-pager',
@@ -14,14 +13,6 @@ export default api
 export function getUserList (parameter) {
   return request({
     url: api.user,
-    method: 'get',
-    params: parameter
-  })
-}
-
-export function getRoleList (parameter) {
-  return request({
-    url: api.role,
     method: 'get',
     params: parameter
   })

@@ -59,15 +59,6 @@ const user = {
           if (response.code === 10000) {
             const result = response.body
             if (result.menu && result.menu.length > 0) {
-                // const role = result.role
-                // role.permissions = result.role.permissions
-                // role.permissions.map(per => {
-                //   if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                //     const action = per.actionEntitySet.map(action => { return action.action })
-                //     per.actionList = action
-                //   }
-                // })
-                // role.permissionList = role.permissions.map(permission => { return permission.permissionId })
                 commit('SET_MENUS', result.menu)
                 commit('SET_INFO', result)
             }
@@ -89,6 +80,9 @@ const user = {
         // logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_NAME', {})
+          commit('SET_AVATAR', '')
+          commit('SET_ROUTERS', [])
           storage.remove(ACCESS_TOKEN)
           resolve()
           close()

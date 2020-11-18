@@ -27,13 +27,12 @@ export const asyncRouterMap = [
     meta: { title: 'menu.index',hidden: true, keepAlive: true },
     component: () => import('@/views/index/index')
   },
-  //权限
+  //权限相关
   {
     path: '/power',
     name: 'Power',
     component: () => import('@/views/power/Index'),
     meta: { title: 'menu.power', hidden: true,keepAlive: true },
-    //redirect: '/power/menu',
     hideChildrenInMenu: true,
   },
   {
@@ -43,17 +42,30 @@ export const asyncRouterMap = [
     meta: { title: 'menu.power.menu', hidden: true, keepAlive: true }
   },
   {
+    path: '/power/api',
+    name: 'PowerApi',
+    component: () => import('@/views/power/Api'),
+    meta: { title: 'menu.power.api', hidden: true, keepAlive: true }
+  },
+  {
+    path: '/power/role',
+    name: 'PowerRole',
+    component: () => import('@/views/power/Role'),
+    meta: { title: 'menu.power.role', hidden: true, keepAlive: true }
+  },
+  //服务相关
+  {
     path: '/service',
     name: 'RpcList',
     meta: { title: 'menu.service', hidden: true,keepAlive: true },
     component: () => import('@/views/service/RpcList')
   },
+  //docker相关
   {
     path: '/docker',
     name: 'docker',
     component: () => import('@/views/docker/Index'),
     meta: { title: 'menu.docker', hidden: true,  keepAlive: true},
-    redirect: '/docker/build',
     hideChildrenInMenu: true,
   },
   {

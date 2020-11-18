@@ -47,7 +47,7 @@ function filterAsyncRouter (routerMap, menus) {
         router.meta.del = menu.del
         router.meta.update = menu.update
         router.meta.select = menu.select
-        router.meta.descripte = menu.descripte
+        router.meta.describe = menu.describe
         if (menu.children&& menu.children.length){
           const r = filterAsyncRouter(routerMap,menu.children)
           router.children= r
@@ -79,6 +79,12 @@ const permission = {
         routerTmpMap[0].children = accessedRouters
         console.log('routerTmpMap',routerTmpMap)
         commit('SET_ROUTERS', routerTmpMap)
+        resolve()
+      })
+    },
+    RomveRoter ({ commit }) {
+      return new Promise(resolve => {
+        commit('SET_ROUTERS', [])
         resolve()
       })
     }
