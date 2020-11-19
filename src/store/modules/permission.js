@@ -63,7 +63,8 @@ function filterAsyncRouter (routerMap, menus) {
 const permission = {
   state: {
     routers: constantRouterMap,
-    addRouters: []
+    addRouters: [],
+    menus:[],
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
@@ -77,7 +78,7 @@ const permission = {
         const { menus } = data
         const accessedRouters = filterAsyncRouter(asyncRouterMap, menus)
         routerTmpMap[0].children = accessedRouters
-        console.log('routerTmpMap',routerTmpMap)
+        console.log('菜单',menus)
         commit('SET_ROUTERS', routerTmpMap)
         resolve()
       })

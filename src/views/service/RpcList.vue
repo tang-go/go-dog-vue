@@ -1,9 +1,9 @@
 <template>
   <div class="table-page-search-wrapper">
     <div class="table-operator">
-      <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.build.button.update') }}</a-button>
+      <a-button v-if="router.select" type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.build.button.update') }}</a-button>
     </div>
-    <a-table ref="table" :columns="columns" :data-source="data" class="components-table-demo-nested">
+    <a-table v-if="router.select" ref="table" :columns="columns" :data-source="data" class="components-table-demo-nested">
       <a-table
         class="components-table-demo-nested"
         slot-scope="record"
@@ -70,13 +70,15 @@ export default {
   data () {
     return {
       data: [],
+      router:{},
       columns,
       innerColumns,
       methods,
     }
   },
   created () {
-    //let self = this
+    this.router = this.$route.meta
+    console.log('当前权限',this.router)
     getServiceList().then(res => {
       console.log(res)
       this.data = []

@@ -1,20 +1,28 @@
 <template>
   <div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.docker.button.build') }}</a-button>
-      <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.docker.button.update') }}</a-button>
+      <a-button v-if="router.add" type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.docker.button.build') }}</a-button>
+      <a-button v-if="router.select" type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.docker.button.update') }}</a-button>
     </div>
-    <s-table ref="table" size="default" :columns="columns" :data="data">
+    <s-table v-if="router.select" ref="table" size="default" :columns="columns" :data="data">
       <span slot="runStatus" slot-scope="runStatus" > 
         <div v-if="runStatus"><a-badge status="success" />{{ $t('menu.service.docker.table.status.run') }}</div>
         <div v-if="!runStatus"><a-badge status="default" />{{ $t('menu.service.docker.table.status.close') }}</div>
       </span>
       <span slot="action" slot-scope="text, record">
-        <a v-if="record.runStatus" @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
-        <a v-if="!record.runStatus" @click="restart(record)">{{ $t('menu.service.docker.button.run') }}</a>
+        <div v-if="router.select">
+          <a v-if="record.runStatus" @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
+        </div>
+        <div v-if="router.update">
+          <a v-if="!record.runStatus" @click="restart(record)">{{ $t('menu.service.docker.button.run') }}</a>
+        </div>
         <a-divider type="vertical" />
-        <a v-if="record.runStatus" @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
-        <a v-if="!record.runStatus" @click="del(record)">{{ $t('menu.service.docker.button.del') }}</a>
+        <div v-if="router.update">
+          <a v-if="record.runStatus" @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
+        </div>
+        <div v-if="router.del">
+          <a v-if="!record.runStatus" @click="del(record)">{{ $t('menu.service.docker.button.del') }}</a>
+        </div>
       </span>
     </s-table>
     <a-modal style="overflow:auto" :footer="null" :width="800" v-model="detailsModel" :title="$t('menu.service.docker.title.see')">
@@ -67,7 +75,7 @@
           </a-button>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-          <a-button type="primary" html-type="submit">
+          <a-button v-if="router.add" type="primary" html-type="submit">
             {{ $t('menu.service.docker.form.button') }}
           </a-button>
         </a-form-item>
@@ -129,6 +137,7 @@ export default {
       },
       logModel: false,
       log: {},
+      router:{},
       detailsModel: false,
       details: {},
       // 查询条件参数
@@ -160,6 +169,8 @@ export default {
     }
   },
   created () {
+    this.router = this.$route.meta
+    console.log('当前权限',this.router)
     console.log(this.form)
     const _this = this
     listTopic('run-docker-topic', function (res) {

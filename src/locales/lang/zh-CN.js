@@ -17,6 +17,9 @@ const locale = {
   'menu.power.api': 'API管理',
   'menu.power.role': '角色管理',
 
+  'menu.sys': '系统管理',
+  'menu.sys.admin': '管理员管理',
+
   'menu.service': '在线服务',
   'menu.service.rpc': '在线服务',
 

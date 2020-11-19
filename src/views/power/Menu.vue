@@ -80,10 +80,9 @@
         }),
       }
     },
-    created(){
+    mounted(){
+      console.log('系统菜单',asyncRouterMap)
       this.router = this.$route.meta
-      console.log('当前页面权限 !!!',this.router)
-      console.log('当前系统菜单',this.menus)
       this.initMenu()
     },
     methods: {

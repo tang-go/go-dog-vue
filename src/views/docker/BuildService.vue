@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.build.button.build') }}</a-button>
-      <a-button type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.build.button.update') }}</a-button>
+      <a-button v-if="router.add" type="primary" icon="plus" @click="buildServiceClick">{{ $t('menu.service.build.button.build') }}</a-button>
+      <a-button v-if="router.select" type="dashed" icon="undo" @click="updateClick">{{ $t('menu.service.build.button.update') }}</a-button>
     </div>
-    <s-table ref="table" size="default" :columns="columns" :data="data">
+    <s-table v-if="router.select" ref="table" size="default" :columns="columns" :data="data">
       <span slot="status" slot-scope="status" > 
         <div v-if="status"><a-badge status="success" />{{ $t('menu.service.build.table.status.success') }}</div>
         <div v-if="!status"><a-badge status="default" />{{ $t('menu.service.build.table.status.ing') }}</div>
       </span>
-      <span slot="action" slot-scope="text, record">
+      <span v-if="router.select" slot="action" slot-scope="text, record">
         <a @click="seeLog(record.log)">{{ $t('menu.service.build.button.seelog') }}</a>
       </span>
     </s-table>
@@ -54,7 +54,7 @@
           <a-input v-decorator="['version', { rules: [{ required: true, message: '镜像版本' }] }]"/>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-          <a-button type="primary" html-type="submit">
+          <a-button v-if="router.add" type="primary" html-type="submit">
             {{ $t('menu.service.build.form.button') }}
           </a-button>
         </a-form-item>
@@ -88,6 +88,7 @@ export default {
       },
       buildModel: false,
       formLayout: 'horizontal',
+      router:{},
       form: this.$form.createForm(this, {
         git: 'string',
         harbor: 'string',
@@ -109,6 +110,8 @@ export default {
     }
   },
   created () {
+    this.router = this.$route.meta
+    console.log('当前权限',this.router)
     const _this = this
     listTopic('build-service-topic', function (res) {
       console.log(res)

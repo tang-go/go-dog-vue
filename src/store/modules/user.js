@@ -11,6 +11,7 @@ const user = {
     welcome: '',
     avatar: '',
     menus: [],
+    apis:[],
     info: {}
   },
 
@@ -30,7 +31,10 @@ const user = {
     },
     SET_INFO: (state, info) => {
       state.info = info
-    }
+    },
+    SET_APIS: (state,apis) => {
+      state.apis = apis
+    },
   },
 
   actions: {
@@ -59,9 +63,12 @@ const user = {
           if (response.code === 10000) {
             const result = response.body
             if (result.menu && result.menu.length > 0) {
-                commit('SET_MENUS', result.menu)
-                commit('SET_INFO', result)
+              commit('SET_MENUS', result.menu)
             }
+            if (result.apis && result.apis.length > 0) {
+              commit('SET_APIS', result.apis)
+            }
+            commit('SET_INFO', result)
             commit('SET_NAME', { name: result.name, welcome: welcome() })
             commit('SET_AVATAR', result.avatar)
             resolve(response)
