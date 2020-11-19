@@ -90,6 +90,8 @@ const user = {
           commit('SET_NAME', {})
           commit('SET_AVATAR', '')
           commit('SET_ROUTERS', [])
+          commit('SET_APIS', [])
+          commit('SET_MENUS', [])
           storage.remove(ACCESS_TOKEN)
           resolve()
           close()
