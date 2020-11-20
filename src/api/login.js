@@ -42,7 +42,7 @@ export function getSmsCaptcha (parameter) {
 
 export function getInfo () {
   return request({
-    url: userApi.UserInfo + '?code=121312',
+    url: userApi.UserInfo,
     method: 'get'
   })
 }

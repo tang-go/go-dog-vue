@@ -92,7 +92,7 @@
     </a-modal>
     
     
-    <a-modal width="1000px" v-model="addApiModel" title="角色API设置" @ok="addMenuModel = false">
+    <a-modal width="1000px" v-model="addApiModel" title="角色API设置" @ok="addApiModel = false">
       <div>
         <div class="table-operator">
           <a-button v-if="router.add" type="primary" icon="plus" @click="addRoleApi">添加角色api权限</a-button>
