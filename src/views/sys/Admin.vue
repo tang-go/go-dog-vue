@@ -8,6 +8,9 @@
         <div v-if="router.update">
           <a-switch :default-checked="row.isDisable"  @change="onChange($event,row)" />
         </div>
+        <div v-if="!router.update">
+          <a-switch :default-checked="row.isDisable" :disabled="true" />
+        </div>
       </span>
       <span slot="action" slot-scope="text, row">
         <a v-if="router.select">
