@@ -11,14 +11,19 @@
 </template>
 
 <script type="text/javascript">
+import storage from 'store'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 export default {
   name: 'Turnoverfamily',
   data () {
     return {
-      bdTokenUrl: process.env.VUE_APP_API_BASE_URL+'/swagger/index.html'
+      bdTokenUrl:''
     }
   },
-  created () { },
+  created () {
+    this.bdTokenUrl = process.env.VUE_APP_API_BASE_URL+'/swagger/index.html?token='+ storage.get(ACCESS_TOKEN)
+    console.log('bdTokenUrl',this.bdTokenUrl)
+  },
   mounted () {
     const oIframe = document.getElementById('bdIframe')
     // const deviceWidth = document.documentElement.clientWidth

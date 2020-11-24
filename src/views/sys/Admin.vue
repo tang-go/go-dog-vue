@@ -6,7 +6,7 @@
     <a-table v-if="router.select" ref="table" :columns="columns" :data-source="data" class="components-table-demo-nested">
       <span slot="isDisable" slot-scope="text, row">
         <div v-if="router.update">
-          <a-switch :default-checked="row.isDisable"  @change="onChange($event,row)" />
+          <a-switch :default-checked="row.isDisable" @change="onChange($event,row)" />
         </div>
         <div v-if="!router.update">
           <a-switch :default-checked="row.isDisable" :disabled="true" />
