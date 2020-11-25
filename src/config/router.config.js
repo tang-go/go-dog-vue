@@ -120,6 +120,11 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/iterm',
+    component: () => import('@/views/iterm/Iterm'),
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/exception/404')
   }

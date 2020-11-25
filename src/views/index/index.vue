@@ -1,5 +1,8 @@
 <template>
   <div style="height:auto;">
+    <div class="container">
+      <div id="terminal-container"></div>
+    </div>
     <iframe
       style="width:100%;height:100%;"
       :src="bdTokenUrl"
@@ -13,6 +16,7 @@
 <script type="text/javascript">
 import storage from 'store'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
+
 export default {
   name: 'Turnoverfamily',
   data () {
@@ -32,7 +36,8 @@ export default {
     oIframe.style.height = deviceHeight + 'px' // 数字是页面布局高度差
     console.log(oIframe)
   },
-  methods: {}
+  methods: {
+  }
 }
 </script>
 
