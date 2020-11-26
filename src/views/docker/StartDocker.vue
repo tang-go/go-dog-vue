@@ -10,19 +10,16 @@
         <div v-if="!runStatus"><a-badge status="default" />{{ $t('menu.service.docker.table.status.close') }}</div>
       </span>
       <span slot="action" slot-scope="text, record">
-        <div v-if="router.select">
-          <a v-if="record.runStatus" @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
-        </div>
-        <div v-if="router.update">
-          <a v-if="!record.runStatus" @click="restart(record)">{{ $t('menu.service.docker.button.run') }}</a>
-        </div>
-        <a-divider type="vertical" />
-        <div v-if="router.update">
-          <a v-if="record.runStatus" @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
-        </div>
-        <div v-if="router.del">
-          <a v-if="!record.runStatus" @click="del(record)">{{ $t('menu.service.docker.button.del') }}</a>
-        </div>
+        <a-divider v-if="record.runStatus&&router.select" type="vertical" />
+        <a v-if="record.runStatus&&router.select" @click="seeDetails(record)">{{ $t('menu.service.docker.button.see') }}</a>
+        <a-divider v-if="!record.runStatus&&router.update" type="vertical" />
+        <a v-if="!record.runStatus&&router.update" @click="restart(record)">{{ $t('menu.service.docker.button.run') }}</a>
+        <a-divider v-if="record.runStatus&&router.select" type="vertical" />
+        <a v-if="record.runStatus&&router.select" @click="seelog(record)">{{ $t('menu.service.docker.button.seelog') }}</a>
+        <a-divider v-if="record.runStatus&&router.update" type="vertical" />
+        <a v-if="record.runStatus&&router.update" @click="close(record)">{{ $t('menu.service.docker.button.close') }}</a>
+        <a-divider v-if="!record.runStatus&&router.del" type="vertical" />
+        <a v-if="!record.runStatus&&router.del" @click="del(record)">{{ $t('menu.service.docker.button.del') }}</a>
       </span>
     </s-table>
     <a-modal style="overflow:auto" :footer="null" :width="800" v-model="detailsModel" :title="$t('menu.service.docker.title.see')">
@@ -99,7 +96,8 @@
 import { STable } from '@/components'
 import { listTopic } from '@/utils/websocket'
 import JsonViewer from 'vue-json-viewer'
-
+import storage from 'store'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { getDockerList, startDocker, closeDocker,restartDocker,delDocker } from '@/api/service'
 import { thistle } from 'color-name'
 
@@ -179,6 +177,12 @@ export default {
     })
   },
   methods: {
+    seelog(record){
+      const token = storage.get(ACCESS_TOKEN)
+      const url = '/iterm?token='+token+'&method=StartListDockerLog&id='+record.id
+      console.log('seelog',url)
+      window.open(url, '_blank')
+    },
     restart(info){
       console.log('restart',info)
       const _this = this

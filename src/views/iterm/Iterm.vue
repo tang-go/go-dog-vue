@@ -6,31 +6,46 @@
 
 <script>
 // 引入xterm，请注意这里和3.x版本的引入路径不一样
-import { Terminal } from 'xterm' 
-import 'xterm/css/xterm.css' 
-import 'xterm/lib/xterm.js' 
+import { Terminal } from 'xterm'
+import 'xterm/css/xterm.css'
+import 'xterm/lib/xterm.js'
 import { FitAddon } from 'xterm-addon-fit'
 
 export default {
   name: 'Shell',
   data() {
     return {
+      id:'',
+      token:'',
+      method:'',
       shellWs: '',
-      term: '', // 保存terminal实例
+      term: '',
       rows: 100,
-      cols: 100
-    } 
+      cols: 100,
+      socket : null,
+      topics : {},
+      ticker :null
+    }
   },
 
   created() {
-    //this.wsShell() 
+    this.token=this.$route.query.token
+    this.method=this.$route.query.method
+    this.id=this.$route.query.id
+    if (this.token&&this.method){
+        console.log('token', this.token)
+        console.log('method', this.method)
+        console.log('id', this.id)
+        this.connect()
+    }
+    //this.wsShell()
   },
 
   mounted() {
-    const _this = this 
+    const _this = this
     // 获取容器宽高/字号大小，定义行数和列数
-    console.log(document.documentElement.clientHeight/16)
-    this.rows = document.documentElement.clientHeight/16 
+    console.log(document.documentElement.clientHeight / 16)
+    this.rows = document.documentElement.clientHeight / 16
 
     const term = new Terminal({
       rendererType: 'canvas', //渲染类型
@@ -45,44 +60,42 @@ export default {
         foreground: '#7e9192', //字体
         //background: '#002833', //背景色
         cursor: 'help', //设置光标
-        lineHeight: 20
-      }
-    }) 
+        lineHeight: 20,
+      },
+    })
     // 创建terminal实例
-    term.open(this.$refs['terminal']) 
+    term.open(this.$refs['terminal'])
     // 换行并输入起始符“$”
     // term.prompt = () => {
-    //   term.write('\r\n$ ') 
-    // } 
-    // term.prompt() 
+    //   term.write('\r\n$ ')
+    // }
+    // term.prompt()
     // // canvas背景全屏
-    var fitAddon = new FitAddon() 
-    term.loadAddon(fitAddon) 
-    fitAddon.fit() 
-    window.addEventListener('resize', resizeScreen) 
+    var fitAddon = new FitAddon()
+    term.loadAddon(fitAddon)
+    fitAddon.fit()
+    window.addEventListener('resize', resizeScreen)
     // 内容全屏显示
     function resizeScreen() {
       // 不传size
       //try {
-        fitAddon.fit() 
-        // 窗口大小改变时触发xterm的resize方法，向后端发送行列数，格式由后端决定
-        // 这里不使用size默认参数，因为改变窗口大小只会改变size中的列数而不能改变行数，所以这里不使用size.clos,而直接使用获取我们根据窗口大小计算出来的行列数
-        // term.onResize(() => {
-        //   _this.onSend({ Op: 'resize', Cols: term.cols, Rows: term.rows }) 
-        // }) 
-    //   } catch (e) {
-    //     console.log('e', e.message) 
-    //   }
+      fitAddon.fit()
+      // 窗口大小改变时触发xterm的resize方法，向后端发送行列数，格式由后端决定
+      // 这里不使用size默认参数，因为改变窗口大小只会改变size中的列数而不能改变行数，所以这里不使用size.clos,而直接使用获取我们根据窗口大小计算出来的行列数
+      // term.onResize(() => {
+      //   _this.onSend({ Op: 'resize', Cols: term.cols, Rows: term.rows })
+      // })
+      //   } catch (e) {
+      //     console.log('e', e.message)
+      //   }
     }
     function runFakeTerminal(_this) {
       if (term._initialized) {
-        return 
+        return
       }
       // 初始化
-      term._initialized = true 
+      term._initialized = true
       term.writeln('开始输出执行日志')
-      term.writeln('0x1B[32;40;1m4(f=32,b=30,d=1)0x1B[0m')
-      term.writeln( `This is Web Terminal of pod\x1B[1 3 31m aaaa \x1B[0m in namespace\x1B[1 3 31m bbb \x1B[0m`) 
       //term.prompt()
       // / **
       //     *添加事件监听器，用于按下键时的事件。事件值包含
@@ -98,72 +111,89 @@ export default {
       //  * @返回一个IDisposable停止监听。
       //  * /
       // 支持输入与粘贴方法
-    //   term.onData(function(key) {
-    //     const order = {
-    //       Data: key,
-    //       Op: 'stdin'
-    //     } 
-    //     console.log(key)
-    //     // _this.onSend(order) 
-    //     // // 为解决窗体resize方法才会向后端发送列数和行数，所以页面加载时也要触发此方法
-    //     // _this.onSend({
-    //     //   Op: 'resize',
-    //     //   Cols: parseInt(term.cols),
-    //     //   Rows: parseInt(term.rows)
-    //     // }) 
-    //     term.writeln(key)
-    //   }) 
-      _this.term = term 
+      //   term.onData(function(key) {
+      //     const order = {
+      //       Data: key,
+      //       Op: 'stdin'
+      //     }
+      //     console.log(key)
+      //     // _this.onSend(order)
+      //     // // 为解决窗体resize方法才会向后端发送列数和行数，所以页面加载时也要触发此方法
+      //     // _this.onSend({
+      //     //   Op: 'resize',
+      //     //   Cols: parseInt(term.cols),
+      //     //   Rows: parseInt(term.rows)
+      //     // })
+      //     term.writeln(key)
+      //   })
+      _this.term = term
     }
-    runFakeTerminal(_this) 
+    runFakeTerminal(_this)
   },
   methods: {
-    wsShell() {
-      const _this = this 
-      const tag = this.urlParam.Tag 
-      const name= this.urlParam.name 
-      const pod= this.urlParam.pod 
-
-      const query = `?tag=${tag}&name=${name}&pod=${pod}`
-      const url = `xxxx/xxxx${query}`
-
-      this.shellWs = this.base.WS({
-        url,
-        isInit: true,
-        openFn() {
-          //   _this.term.resize({ rows: _this.rows, cols: 100 })  //终端窗口重新设置大小 并触发term.on('resize')
-        },
-        messageFn(e) {
-          console.log('message', e) 
-          if (e) {
-            const data = JSON.parse(e.data) 
-            if (data.Data == '\n' || data.Data == '\r\nexit\r\n') {
-              _this.$message('连接已关闭') 
-            }
-            // 打印后端返回数据
-            _this.term.write(data.Data) 
-          }
-        },
-        errorFn(e) {
-          //出现错误关闭当前ws,并且提示
-          console.log('error', e) 
-          _this.$message.error({
-            message: 'ws 请求失败,请刷新重试~',
-            duration: 5000
-          }) 
+    connect () {
+        if (this.socket !== null) {
+            return
         }
-      })
+        const _this = this
+        const token = this.token
+        const method = this.method
+        const id = this.id
+
+        const query = `?token=${token}&method=${method}&id=${id}`
+        const url = process.env.VUE_APP_API_WS_URL+'/xtermws'+query
+        console.log(url)
+        if (typeof (WebSocket) === 'undefined') {
+            alert('您的浏览器不支持socket')
+        } else {
+            // 实例化socket
+            this.socket = new WebSocket(url)
+            // 监听socket连接
+            this.socket.onopen = this.OnOpen
+            // 监听socket错误信息
+            this.socket.onerror = this.OnError
+            // 监听socket消息
+            this.socket.onmessage = this.OnMessage
+            // 监听socket销毁信息
+            this.socket.onclose = this.OnClose
+        }
+        },
+    close(){
+        if (this.socket!==null){
+            this.socket.close()
+        }
     },
-    onSend(data) {
-      data = this.base.isObject(data) ? JSON.stringify(data) : data
-      data = this.base.isArray(data) ? data.toString() : data
-      data = data.replace(/\\\\/, '\\')
-      this.shellWs.onSend(data)
+    OnOpen () {
+    console.log('socket连接成功')
+    if (this.socket) {
+        const _this = this
+        this.ticker = setInterval(function () {
+            _this.Send('ping')
+            console.log('ping')
+        }, 2000)
+    }
+    },
+    OnError () {
+        console.log('连接错误')
+    },
+    OnMessage (msg) {
+        const data = JSON.parse(msg.data)
+        console.log('ws recv : ',this.trim(data))
+        this.term.writeln(this.trim(data))
+    },
+    Send (msg) {
+        this.socket.send(msg)
+    },
+    OnClose () {
+        console.log('socket已经关闭')
+        //掉线
+        clearInterval(this.ticker)
+        this.socket = null
     },
     //删除左右两端的空格
     trim(str) {
       return str.replace(/(^\s*)|(\s*$)/g, '')
-    }
-  }
+    },
+  },
 }
 </script>

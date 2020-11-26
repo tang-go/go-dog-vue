@@ -54,6 +54,7 @@ const locale = {
   'menu.service.docker.button.build': '启动服务',
   'menu.service.docker.button.update': '刷新',
   'menu.service.docker.button.see': '详情',
+  'menu.service.docker.button.seelog': '查看日志',
   'menu.service.docker.button.run': '启动',
   'menu.service.docker.button.del': '删除',
   'menu.service.docker.button.close': '关闭',

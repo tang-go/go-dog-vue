@@ -13,7 +13,7 @@ export function connect (token) {
   if (socket !== null) {
     return
   }
-  const path = process.env.VUE_APP_API_WS_URL + '?token=' + token
+  const path = process.env.VUE_APP_API_WS_URL + '/ws?token=' + token
   console.log(path)
   if (typeof (WebSocket) === 'undefined') {
     alert('您的浏览器不支持socket')
