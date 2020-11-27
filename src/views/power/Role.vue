@@ -231,6 +231,9 @@
     methods: {
       addRoleApiOk(){
         this.addRoleApiForm.validateFields((err, values) => {
+          if (err) {
+            return
+          }
           console.log('addRoleApiOk',values)
           const data = {apiID: this.adminApis[values.index].id,roleID: this.roleID}
           console.log('bind role api',data)
@@ -326,6 +329,9 @@
       },
       addRoleMenuOk(){
         this.addRoleMenuform.validateFields((err, values) => {
+          if (err) {
+            return
+          }
           console.log('addRoleMenuOk',values)
           const data = {add: false,del: false,menuID: this.adminMenus[values.index].id,roleID: this.roleID,select: true,update: false}
           if (values.add === 'add'){
@@ -449,6 +455,9 @@
       },
       addOk () {
         this.form.validateFields((err, values) => {
+          if (err) {
+            return
+          }
           console.log(values)
           createRole({describe:values.describe,name:values.name}).then(res => {
             if (res.code !== 10000) {

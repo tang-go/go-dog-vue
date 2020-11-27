@@ -28,18 +28,25 @@
       </div>
     </a-modal>
     <a-modal :footer="null" :width="800" v-model="buildModel" :title="$t('menu.service.docker.title.build')">
-      <a-form :form="form" :label-col="labelCol" :wrapper-col="wrapperCol" @submit="handleSubmit">
-        <a-form-item :label="$t('menu.service.docker.form.images')" v-bind="formItemLayout">
-          <a-input v-decorator="['images', { rules: [{ required: true, message: '请输入镜像地址' }] }]"/>
+      <a-form :form="form" @submit="handleSubmit">
+        <a-form-item 
+          v-bind="formItemLayout" 
+          :label="$t('menu.service.build.form.harbor')">
+          <a-select
+            :placeholder="$t('menu.service.build.form.harbor')"
+            v-decorator="['image', { rules: [{required: true, message: '镜像仓库必须选择'}] }]">ibu
+            <a-select-option v-for="(item,index) in images" :key="index" :value="item.id">{{ item.address }}</a-select-option>
+          </a-select>
         </a-form-item>
-        <a-form-item :label="$t('menu.service.docker.form.name')" v-bind="formItemLayout">
-          <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入服务名称' }] }]"/>
+        <a-form-item 
+          v-bind="formItemLayout" 
+          :label="$t('menu.service.build.form.name')">
+          <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入镜像名称' }] }]"/>
         </a-form-item>
-        <a-form-item :label="$t('menu.service.docker.form.account')" v-bind="formItemLayout">
-          <a-input v-decorator="['account', { rules: [{ required: false, message: '请输入Harbor账号' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.docker.form.pwd')" v-bind="formItemLayout">
-          <a-input v-decorator="['pwd', { rules: [{ required: false, message: '请输入Harbor密码' }] }]"/>
+        <a-form-item  
+          v-bind="formItemLayout" 
+          :label="$t('menu.service.build.form.version')">
+          <a-input v-decorator="['version', { rules: [{ required: true, message: '镜像版本' }] }]"/>
         </a-form-item>
         <a-form-item 
           v-for="(k, index) in form.getFieldValue('keys')"
@@ -100,6 +107,7 @@ import storage from 'store'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { getDockerList, startDocker, closeDocker,restartDocker,delDocker } from '@/api/service'
 import { thistle } from 'color-name'
+import { getGitList,getImageList } from '@/api/storage'
 
 let id = 0
 export default {
@@ -133,6 +141,7 @@ export default {
           sm: { span: 20, offset: 4 },
         },
       },
+      images:[],
       logModel: false,
       log: {},
       router:{},
@@ -171,12 +180,33 @@ export default {
     console.log('当前权限',this.router)
     console.log(this.form)
     const _this = this
+    this.initImage()
     listTopic('run-docker-topic', function (res) {
       console.log(res)
       _this.log = _this.log + res + '</p>'
     })
   },
   methods: {
+    initImage(){
+      getImageList().then(res => {
+        this.images = []
+        if (res.code === 10000) {
+          const body = res.body
+          console.log(body.images)
+          for (let i = 0; i < body.images.length; ++i) {
+            const data = {
+              key:body.images[i].id,
+              id:body.images[i].id,
+              address:body.images[i].address,
+              account:body.images[i].account,
+              pwd:body.images[i].pwd,
+              time:body.images[i].time,
+            }
+            this.images.push(data)
+          }
+        }
+      })
+    },
     seelog(record){
       const token = storage.get(ACCESS_TOKEN)
       const url = '/iterm?token='+token+'&method=StartListDockerLog&id='+record.id
@@ -314,6 +344,9 @@ export default {
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
+        if (err) {
+           return
+        }
         if (!values.ports) {
           values.ports = []
         }
@@ -324,7 +357,7 @@ export default {
           }
           return false
         })
-        var param = { images: values.images, account: values.account, pwd: values.pwd, name: values.name, ports: ports }
+        var param = { image: values.image, name: values.name,version: values.version, ports: ports }
         console.log(param)
         if (!err) {
           startDocker(param).then(res => {

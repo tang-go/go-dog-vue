@@ -74,6 +74,26 @@ export const asyncRouterMap = [
     meta: { title: 'menu.service', hidden: true,keepAlive: true },
     component: () => import('@/views/service/RpcList')
   },
+  //仓库相关
+  {
+    path: '/storage',
+    name: 'storage',
+    component: () => import('@/views/storage/Index'),
+    meta: { title: 'menu.storage', hidden: true,  keepAlive: true},
+    hideChildrenInMenu: true,
+  },
+  {
+    path: '/storage/git',
+    name: 'StorageGit',
+    component: () => import('@/views/storage/Git'),
+    meta: { title: 'menu.storage.git', hidden: true, keepAlive: true}
+  },
+  {
+    path: '/storage/image',
+    name: 'StorageImage',
+    component: () => import('@/views/storage/Image'),
+    meta: { title: 'menu.storage.image', hidden: true, keepAlive: true}
+  },
   //docker相关
   {
     path: '/docker',

@@ -23,7 +23,12 @@ const locale = {
   'menu.service': '在线服务',
   'menu.service.rpc': '在线服务',
 
+  'menu.storage':'仓库管理',
+  'menu.storage.git': 'GIT仓库',
+  'menu.storage.image': '镜像仓库',
+
   'menu.docker': 'docker管理',
+
   'menu.service.build': '发布docker镜像',
   'menu.service.build.title.build': '发布服务',
   'menu.service.build.title.seelog': '执行日志',
@@ -37,10 +42,10 @@ const locale = {
   'menu.service.build.table.status.ing': '执行中',
   'menu.service.build.table.time': '时间',
   'menu.service.build.table.action': '操作',
-  'menu.service.build.form.git': 'git地址',
+  'menu.service.build.form.git': 'git仓库',
   'menu.service.build.form.gitAccount':'git账号',
   'menu.service.build.form.gitPwd':'git密码',
-  'menu.service.build.form.harbor': '镜像地址',
+  'menu.service.build.form.harbor': '镜像仓库',
   'menu.service.build.form.name': '镜像名称',
   'menu.service.build.form.account': 'harbor账号',
   'menu.service.build.form.pwd': '密码',
@@ -48,7 +53,7 @@ const locale = {
   'menu.service.build.form.version': '版本',
   'menu.service.build.form.button': '确定发布',
 
-  'menu.service.docker': '通过docker启动服务',
+  'menu.service.docker': 'docker启动服务',
   'menu.service.docker.title.build': '启动服务',
   'menu.service.docker.title.see': '详情',
   'menu.service.docker.button.build': '启动服务',

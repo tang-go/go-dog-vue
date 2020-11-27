@@ -27,28 +27,24 @@
     <a-modal :footer="null" :width="800" v-model="buildModel" :title="$t('menu.service.build.title.build')">
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
         <a-form-item :label="$t('menu.service.build.form.git')">
-          <a-input v-decorator="['git', { rules: [{ required: true, message: '请输入git仓库地址' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.build.form.gitAccount')">
-          <a-input v-decorator="['gitAccount', { rules: [{ required: false, message: '请输入git账号' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.build.form.gitPwd')">
-          <a-input v-decorator="['gitPwd', { rules: [{ required: false, message: '请输入git密码' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.build.form.harbor')">
-          <a-input v-decorator="['harbor', { rules: [{ required: true, message: '请输入镜像仓库地址' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.build.form.name')">
-          <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入镜像名称' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.build.form.account')">
-          <a-input v-decorator="['account', { rules: [{ required: false, message: '请输入Harbor账号' }] }]"/>
-        </a-form-item>
-        <a-form-item :label="$t('menu.service.build.form.pwd')">
-          <a-input v-decorator="['pwd', { rules: [{ required: false, message: '请输入Harbor密码' }] }]"/>
+          <a-select
+            :placeholder="$t('menu.service.build.form.git')"
+            v-decorator="['git', { rules: [{required: true, message: 'git仓库必须选择'}] }]">ibu
+            <a-select-option v-for="(item,index) in gits" :key="index" :value="item.id">{{ item.address }}</a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item :label="$t('menu.service.build.form.path')">
           <a-input v-decorator="['path', { rules: [{ required: true, message: '请输入需要编译的目录' }] }]"/>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.build.form.harbor')">
+          <a-select
+            :placeholder="$t('menu.service.build.form.harbor')"
+            v-decorator="['image', { rules: [{required: true, message: '镜像仓库必须选择'}] }]">ibu
+            <a-select-option v-for="(item,index) in images" :key="index" :value="item.id">{{ item.address }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item :label="$t('menu.service.build.form.name')">
+          <a-input v-decorator="['name', { rules: [{ required: true, message: '请输入镜像名称' }] }]"/>
         </a-form-item>
         <a-form-item :label="$t('menu.service.build.form.version')">
           <a-input v-decorator="['version', { rules: [{ required: true, message: '镜像版本' }] }]"/>
@@ -66,7 +62,7 @@
 <script>
 import { STable } from '@/components'
 import { listTopic } from '@/utils/websocket'
-
+import { getGitList,getImageList } from '@/api/storage'
 import { getBuildServiceList } from '@/api/service'
 import { buildService } from '@/api/service'
 
@@ -76,6 +72,8 @@ export default {
   },
   data () {
     return {
+      gits:[],
+      images:[],
       logModel: false,
       log: '',
       // 查询条件参数
@@ -113,12 +111,54 @@ export default {
     this.router = this.$route.meta
     console.log('当前权限',this.router)
     const _this = this
+    this.initGit()
+    this.initImage()
     listTopic('build-service-topic', function (res) {
       console.log(res)
       _this.log = _this.log + res + '</p>'
     })
   },
   methods: {
+    initImage(){
+      getImageList().then(res => {
+        this.images = []
+        if (res.code === 10000) {
+          const body = res.body
+          console.log(body.images)
+          for (let i = 0; i < body.images.length; ++i) {
+            const data = {
+              key:body.images[i].id,
+              id:body.images[i].id,
+              address:body.images[i].address,
+              account:body.images[i].account,
+              pwd:body.images[i].pwd,
+              time:body.images[i].time,
+            }
+            this.images.push(data)
+          }
+        }
+      })
+    },
+    initGit(){
+        getGitList().then(res => {
+          this.gits = []
+          if (res.code === 10000) {
+            const body = res.body
+            console.log(body.gits)
+            for (let i = 0; i < body.gits.length; ++i) {
+              const data = {
+                key:body.gits[i].id,
+                id:body.gits[i].id,
+                address:body.gits[i].address,
+                account:body.gits[i].account,
+                pwd:body.gits[i].pwd,
+                time:body.gits[i].time,
+              }
+              this.gits.push(data)
+            }
+          }
+        })
+      },
     logcancel (e) {
       this.$refs.table.refresh(true)
     },
@@ -135,21 +175,23 @@ export default {
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
-        console.log(values)
-        buildService(values).then(res => {
-          if (res.code !== 10000) {
-            this.$notification['error']({
-              message: '错误提示',
-              description:
-                res.msg,
-              duration: 3,
-            })
-            return
-          }
-          this.buildModel = false
-          this.$refs.table.refresh(true)
-          this.seeLog('正在加载执行日志....</p>')
-        })
+        if (!err) {
+          console.log(values)
+          buildService(values).then(res => {
+            if (res.code !== 10000) {
+              this.$notification['error']({
+                message: '错误提示',
+                description:
+                  res.msg,
+                duration: 3,
+              })
+              return
+            }
+            this.buildModel = false
+            this.$refs.table.refresh(true)
+            this.seeLog('正在加载执行日志....</p>')
+          })
+        }
       })
     }
   }

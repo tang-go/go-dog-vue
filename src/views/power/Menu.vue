@@ -146,6 +146,9 @@
       },
       addOk () {
         this.form.validateFields((err, values) => {
+          if (err) {
+            return
+          }
           console.log(values)
           createMenu({describe:values.describe,sort:Number(values.sort),parentID:this.parentID,url: this.menus[values.index].path}).then(res => {
             if (res.code !== 10000) {
