@@ -332,18 +332,18 @@
           if (err) {
             return
           }
-          console.log('addRoleMenuOk',values)
+          console.log('addRoleMenuOk',values.checkbox)
           const data = {add: false,del: false,menuID: this.adminMenus[values.index].id,roleID: this.roleID,select: true,update: false}
-          if (values.add === 'add'){
+          if (values.checkbox.includes('add')){
             data.add = true
           }
-          if (values.del === 'del'){
+          if (values.checkbox.includes('del')){
             data.del = true
           }
-          if (values.update === 'update'){
+          if (values.checkbox.includes('update')){
             data.update = true
           }
-          if (values.select === 'select'){
+          if (values.checkbox.includes('select')){
             data.select = true
           }
           console.log('bind role menu',data)
