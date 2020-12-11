@@ -21,11 +21,19 @@ export const routerTmpMap = [
 ]
 
 export const asyncRouterMap = [
+  //首页显示文档
   {
     path: '/index',
     name: 'Index',
-    meta: { title: 'menu.index',hidden: true, keepAlive: true },
-    component: () => import('@/views/index/index')
+    component: () => import('@/views/index/Index'),
+    meta: { title: 'menu.index', hidden: true,keepAlive: true },
+    hideChildrenInMenu: true,
+  },
+  {
+    path: '/index/docs',
+    name: 'IndexDocs',
+    meta: { title: 'menu.index.docs',hidden: true, keepAlive: true },
+    component: () => import('@/views/index/Docs')
   },
   //权限相关
   {

@@ -11,6 +11,8 @@ const locale = {
   'message': '-',
   'menu.home': '主页',
   'menu.index': '首页',
+  'menu.index.docs': '文档',
+  
 
   'menu.power': '权限管理',
   'menu.power.menu': '菜单管理',
